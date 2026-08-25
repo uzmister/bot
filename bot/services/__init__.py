@@ -1,0 +1,1 @@
+"""Biznes-logika modullari."""
