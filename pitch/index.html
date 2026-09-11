@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HamyonAPI — Pitch Deck 2026</title>
+<meta name="description" content="HamyonAPI — Telegram botlar uchun avtomatik to'lov tizimi. Muammo, yechim, TAM/SAM/SOM, biznes model va jamoa.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════
+   HamyonAPI — Pitch Deck · Soft UI (neumorphism) · to'q ko'k / och ko'k
+   ══════════════════════════════════════════════════════════ */
+:root{
+  --navy-950:#030a18;
+  --navy-900:#050f22;
+  --navy-800:#071530;
+  --navy-700:#0a1c3d;
+  --navy-600:#0e2549;
+  --surface:#0d2145;
+  --sky:#7cc0ff;
+  --sky-200:#bfe0ff;
+  --sky-400:#9dd3ff;
+  --blue:#2f7fe8;
+  --cyan:#4fe3d0;
+  --amber:#ffc978;
+  --rose:#ff8fa8;
+  --green:#5ce0a0;
+  --txt:#eaf3ff;
+  --muted:#9ab4d8;
+  --muted-2:#6f8cb4;
+  --line:rgba(124,192,255,.14);
+  --shadow-out:18px 18px 42px rgba(2,8,20,.72), -12px -12px 34px rgba(124,192,255,.055);
+  --shadow-soft:10px 10px 26px rgba(2,8,20,.62), -7px -7px 18px rgba(124,192,255,.05);
+  --shadow-sm:5px 5px 14px rgba(2,8,20,.55), -4px -4px 10px rgba(124,192,255,.045);
+  --shadow-in:inset 7px 7px 16px rgba(2,8,20,.72), inset -6px -6px 14px rgba(124,192,255,.055);
+  --r:30px; --r-sm:20px; --r-xs:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  font-family:'Manrope',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  background:
+    radial-gradient(1200px 700px at 82% -12%, rgba(47,127,232,.22), transparent 60%),
+    radial-gradient(900px 600px at -8% 108%, rgba(79,227,208,.10), transparent 60%),
+    linear-gradient(160deg, var(--navy-900) 0%, var(--navy-950) 55%, #04101f 100%);
+  color:var(--txt);
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+  background-image:radial-gradient(rgba(124,192,255,.08) 1px, transparent 1px);
+  background-size:34px 34px;
+}
+
+/* ── Stage / scaling ───────────────────────────────────── */
+#viewport{position:fixed;inset:0;z-index:1}
+#stage{
+  position:absolute;left:50%;top:50%;width:1600px;height:900px;
+  transform:translate(-50%,-50%) scale(var(--scale,1));
+  transform-origin:center center;
+}
+.slide{
+  position:absolute;inset:0;padding:56px 70px 84px;
+  display:flex;flex-direction:column;overflow:hidden;
+  opacity:0;visibility:hidden;transform:translateY(22px) scale(.985);
+  transition:opacity .5s ease, transform .55s cubic-bezier(.22,.75,.25,1), visibility .5s;
+}
+.slide.is-active{opacity:1;visibility:visible;transform:none}
+.slide.is-prev{transform:translateY(-22px) scale(.985)}
+
+.fitwrap{display:flex;flex-direction:column;flex:1;min-height:0;transform-origin:top left}
+.noanim,.noanim *{transition:none !important;animation:none !important}
+@media print{.fitwrap{transform:none !important;width:100% !important}}
+
+/* ── Typography ───────────────────────────────────────── */
+.eyebrow{
+  display:inline-flex;align-items:center;gap:10px;font-size:14px;font-weight:700;
+  letter-spacing:.20em;text-transform:uppercase;color:var(--sky);
+}
+.eyebrow::before{content:'';width:34px;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,var(--sky),transparent)}
+h1{font-size:74px;line-height:1.04;font-weight:800;letter-spacing:-.025em}
+h2{font-size:44px;line-height:1.12;font-weight:800;letter-spacing:-.02em}
+h3{font-size:21px;line-height:1.25;font-weight:750}
+h4{font-size:17px;font-weight:700}
+.lead{font-size:21px;line-height:1.55;color:var(--muted);font-weight:450}
+p,li{font-size:16.5px;line-height:1.55;color:var(--muted)}
+.slide-head{display:flex;align-items:flex-end;justify-content:space-between;gap:36px;margin-bottom:26px}
+.slide-head .txt{display:flex;flex-direction:column;gap:12px}
+.slide-head h2{max-width:900px}
+.hl{color:var(--sky-200)}
+.hl-u{background:linear-gradient(transparent 62%, rgba(124,192,255,.28) 62%);border-radius:3px;padding:0 3px}
+strong,b{color:var(--txt);font-weight:700}
+
+/* ── Soft UI primitives ───────────────────────────────── */
+.card{
+  background:linear-gradient(150deg,#123062 0%, var(--surface) 48%, #0a1b39 100%);
+  border-radius:var(--r);box-shadow:var(--shadow-out);
+  border:1px solid rgba(124,192,255,.08);
+  padding:26px 28px;position:relative;overflow:hidden;
+}
+.card::after{
+  content:'';position:absolute;inset:0;border-radius:var(--r);pointer-events:none;
+  background:linear-gradient(150deg,rgba(255,255,255,.055),transparent 42%);
+}
+.card.flat{box-shadow:var(--shadow-soft)}
+.card.sunk{background:linear-gradient(160deg,#081a36,#0b1e3f);box-shadow:var(--shadow-in);border-color:rgba(124,192,255,.06)}
+.card-hover{transition:transform .3s ease, box-shadow .3s ease}
+.card-hover:hover{transform:translateY(-5px)}
+.icon{
+  width:52px;height:52px;border-radius:17px;flex:none;display:grid;place-items:center;font-size:24px;
+  background:linear-gradient(150deg,#16386e,#0a1c3c);
+  box-shadow:var(--shadow-sm), inset 1px 1px 0 rgba(191,224,255,.12);
+  border:1px solid rgba(124,192,255,.13);
+}
+.badge{
+  display:inline-flex;align-items:center;gap:8px;padding:8px 15px;border-radius:100px;
+  font-size:14px;font-weight:650;color:var(--sky-200);
+  background:linear-gradient(150deg,#0f2650,#0a1c39);
+  box-shadow:var(--shadow-sm);border:1px solid rgba(124,192,255,.13);
+}
+.badge.on{color:#06182e;background:linear-gradient(140deg,var(--sky-200),var(--sky));border-color:transparent;font-weight:800}
+.chip-row{display:flex;flex-wrap:wrap;gap:12px}
+.pill-num{
+  font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;letter-spacing:.06em;
+  color:var(--sky);
+}
+.kicker{font-size:13.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-2)}
+.divider{height:1px;background:linear-gradient(90deg,var(--line),transparent);margin:16px 0}
+
+/* ── Layout helpers ───────────────────────────────────── */
+.row{display:flex;gap:26px;flex:1;min-height:0}
+.row.tight{gap:18px}
+.col{display:flex;flex-direction:column;gap:18px;min-width:0}
+.grid{display:grid;gap:22px}
+.g2{grid-template-columns:repeat(2,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g4{grid-template-columns:repeat(4,1fr)}
+.center{align-items:center;justify-content:center;text-align:center}
+.flex1{flex:1;min-height:0}
+.mt-a{margin-top:auto}
+
+/* ── Feature card content ─────────────────────────────── */
+.feat{display:flex;flex-direction:column;gap:13px;padding:24px 24px}
+.feat h3{letter-spacing:-.01em}
+.feat p{font-size:15.5px;line-height:1.5}
+.feat .num{
+  position:absolute;right:20px;top:16px;font-size:44px;font-weight:800;line-height:1;
+  color:transparent;-webkit-text-stroke:1.4px rgba(124,192,255,.22);
+}
+
+/* ── Stats ────────────────────────────────────────────── */
+.stat{display:flex;flex-direction:column;gap:7px;padding:24px 26px}
+.stat .v{font-size:40px;font-weight:800;letter-spacing:-.02em;
+  background:linear-gradient(120deg,#ffffff,var(--sky-200) 45%,var(--sky));
+  -webkit-background-clip:text;background-clip:text;color:transparent;line-height:1.05}
+.stat .v small{font-size:20px;font-weight:700}
+.stat .l{font-size:15px;color:var(--muted);line-height:1.4}
+.stat .sub{font-size:13px;color:var(--muted-2)}
+
+/* ── Bullets ──────────────────────────────────────────── */
+ul.clean{list-style:none;display:flex;flex-direction:column;gap:12px}
+ul.clean li{position:relative;padding-left:30px;font-size:16.5px;color:var(--muted)}
+ul.clean li::before{
+  content:'';position:absolute;left:2px;top:8px;width:14px;height:14px;border-radius:5px;
+  background:linear-gradient(140deg,var(--sky-200),var(--blue));
+  box-shadow:0 0 0 4px rgba(124,192,255,.10);
+}
+ul.clean li b{color:var(--txt)}
+ul.tick li::before{content:'✓';background:none;box-shadow:none;width:auto;height:auto;
+  left:0;top:0;color:var(--green);font-weight:800;font-size:16px}
+ul.cross li::before{content:'✕';background:none;box-shadow:none;color:var(--rose);font-weight:800;
+  width:auto;height:auto;left:0;top:0;font-size:15px}
+
+/* ── Table ────────────────────────────────────────────── */
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:15px}
+th,td{padding:13px 14px;text-align:left;color:var(--muted)}
+thead th{
+  font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--sky);
+  font-weight:750;border-bottom:1px solid var(--line)
+}
+tbody tr:nth-child(odd) td{background:rgba(124,192,255,.032)}
+tbody td:first-child{color:var(--txt);font-weight:650}
+td{border-bottom:1px solid rgba(124,192,255,.07)}
+tr.us td{background:linear-gradient(90deg,rgba(124,192,255,.18),rgba(124,192,255,.07)) !important;color:var(--txt);font-weight:700}
+tr.us td:first-child{color:#fff}
+.ok{color:var(--green);font-weight:800}.no{color:var(--rose);font-weight:800}.mid{color:var(--amber);font-weight:750}
+
+/* ── Code ─────────────────────────────────────────────── */
+.code{
+  font-family:'JetBrains Mono',monospace;font-size:13.4px;line-height:1.72;
+  background:linear-gradient(160deg,#061329,#081833);box-shadow:var(--shadow-in);
+  border-radius:var(--r-sm);padding:20px 22px;overflow:hidden;color:#c8defc;
+  border:1px solid rgba(124,192,255,.08);white-space:pre;
+}
+.code .c{color:#5c7ba6}.code .k{color:var(--sky)}.code .s{color:var(--green)}
+.code .n{color:var(--amber)}.code .m{color:var(--cyan)}
+.code-bar{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.dot{width:11px;height:11px;border-radius:50%;background:#25406b;box-shadow:inset 0 0 0 1px rgba(124,192,255,.2)}
+.dot.g{background:#2f8f6b}.dot.y{background:#b58a3d}.dot.r{background:#a8546a}
+
+/* ── Images ───────────────────────────────────────────── */
+.shot{position:relative;border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow-out);
+  border:1px solid rgba(124,192,255,.10);background:#08152c}
+.shot img{display:block;width:100%;height:100%;object-fit:cover}
+.shot::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(124,192,255,.08),transparent 30%,rgba(3,10,24,.42))}
+.shot .tag{position:absolute;left:16px;bottom:14px;z-index:2}
+
+/* ── Progress flow / steps ────────────────────────────── */
+.step{display:flex;gap:16px;align-items:flex-start;padding:20px 22px}
+.step .sn{
+  flex:none;width:46px;height:46px;border-radius:15px;display:grid;place-items:center;
+  font-family:'JetBrains Mono',monospace;font-weight:700;font-size:17px;color:#06182e;
+  background:linear-gradient(140deg,var(--sky-200),var(--sky));box-shadow:var(--shadow-sm)
+}
+.step h3{font-size:18.5px;margin-bottom:5px}
+.step p{font-size:14.8px;line-height:1.45}
+
+/* ── TAM / SAM / SOM ──────────────────────────────────── */
+.tss-wrap{display:flex;align-items:center;justify-content:center;flex:1;position:relative}
+.tss-legend{display:flex;flex-direction:column;gap:14px}
+.tss-item{display:flex;gap:16px;align-items:flex-start;padding:18px 20px}
+.swatch{flex:none;width:16px;height:16px;border-radius:6px;margin-top:4px;box-shadow:var(--shadow-sm)}
+.tss-item .v{font-size:29px;font-weight:800;letter-spacing:-.02em;color:#fff;line-height:1.1}
+.tss-item .pct{font-size:13px;color:var(--muted-2);font-weight:600}
+
+/* ── Charts ───────────────────────────────────────────── */
+.bars{display:flex;align-items:flex-end;gap:12px;height:100%;padding:16px 18px 12px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:9px;height:100%;justify-content:flex-end}
+.bar{
+  width:100%;border-radius:11px 11px 5px 5px;position:relative;
+  background:linear-gradient(180deg,var(--sky-200),var(--blue) 70%,#1b4c93);
+  box-shadow:var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,.35);
+  transition:height 1s cubic-bezier(.2,.8,.2,1);
+}
+.bar.hot{background:linear-gradient(180deg,#ffffff,var(--sky) 55%,#2f7fe8)}
+.bar .bv{position:absolute;top:-25px;left:50%;transform:translateX(-50%);
+  font-size:12.5px;font-weight:750;color:var(--sky-200);white-space:nowrap}
+.bar-col .bl{font-size:12px;color:var(--muted-2);font-weight:650;white-space:nowrap}
+
+/* ── Timeline ─────────────────────────────────────────── */
+.tl{position:relative;display:grid;gap:0;flex:1;align-content:center}
+.tl::before{content:'';position:absolute;left:0;right:0;top:64px;height:3px;border-radius:3px;
+  background:linear-gradient(90deg,transparent,rgba(124,192,255,.4) 12%,rgba(124,192,255,.4) 88%,transparent)}
+.tl-row{display:grid;grid-template-columns:repeat(5,1fr);gap:18px}
+.tl-node{position:relative;padding-top:44px}
+.tl-node::before{content:'';position:absolute;top:55px;left:26px;width:19px;height:19px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#fff,var(--sky) 60%,var(--blue));
+  box-shadow:0 0 0 7px rgba(124,192,255,.12), var(--shadow-sm)}
+.tl-node .q{position:absolute;top:0;left:26px;transform:translateY(-100%);
+  font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--sky);letter-spacing:.08em}
+.tl-node .card{padding:18px 18px 16px;margin-top:34px}
+.tl-node h4{font-size:15px;color:#fff;margin-bottom:7px}
+.tl-node p{font-size:13.2px;line-height:1.42}
+
+/* ── Pricing ────────────────────────────────────────── */
+.price{display:flex;flex-direction:column;gap:0;padding:0;overflow:hidden}
+.price .top{padding:26px 28px 20px;display:flex;flex-direction:column;gap:8px}
+.price .amt{display:flex;align-items:baseline;gap:9px;margin-top:6px}
+.price .amt b{font-size:47px;font-weight:800;letter-spacing:-.03em;color:#fff;line-height:1}
+.price .amt span{font-size:15px;color:var(--muted)}
+.price ul{list-style:none;display:flex;flex-direction:column;gap:10px;padding:20px 28px 26px;
+  border-top:1px solid var(--line);background:rgba(6,17,36,.35)}
+.price li{position:relative;padding-left:26px;font-size:14.8px;color:var(--muted)}
+.price li::before{content:'✓';position:absolute;left:0;top:0;color:var(--sky);font-weight:800}
+.price.best{border:1px solid rgba(124,192,255,.34);
+  box-shadow:var(--shadow-out), 0 0 0 1px rgba(124,192,255,.14), 0 22px 60px rgba(47,127,232,.20)}
+.ribbon{position:absolute;right:-1px;top:22px;padding:7px 18px 7px 16px;border-radius:100px 0 0 100px;
+  font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#06182e;
+  background:linear-gradient(120deg,#fff,var(--sky))}
+
+/* ── Donut ────────────────────────────────────────────── */
+.donut{width:230px;height:230px;border-radius:50%;flex:none;position:relative;
+  background:conic-gradient(var(--blue) 0 40%, var(--sky) 40% 70%, var(--cyan) 70% 90%, var(--amber) 90% 100%);
+  box-shadow:var(--shadow-out)}
+.donut::after{content:'';position:absolute;inset:34px;border-radius:50%;
+  background:linear-gradient(160deg,#0b1e3f,#081833);box-shadow:var(--shadow-in)}
+.donut .mid{position:absolute;inset:0;display:grid;place-items:center;z-index:2;text-align:center}
+.donut .mid b{display:block;font-size:25px;font-weight:800;color:#fff;letter-spacing:-.02em}
+.donut .mid span{font-size:12px;color:var(--muted-2);letter-spacing:.1em;text-transform:uppercase}
+.legend{display:flex;flex-direction:column;gap:11px}
+.legend div{display:flex;align-items:center;gap:11px;font-size:15px;color:var(--muted)}
+.legend i{width:13px;height:13px;border-radius:5px;flex:none;box-shadow:var(--shadow-sm)}
+
+/* ── Team ─────────────────────────────────────────────── */
+.person{display:flex;gap:30px;align-items:center;padding:32px 34px}
+.avatar{width:186px;height:186px;border-radius:50%;flex:none;overflow:hidden;position:relative;
+  box-shadow:var(--shadow-out), 0 0 0 1px rgba(124,192,255,.25)}
+.avatar img{width:100%;height:100%;object-fit:cover;object-position:center 22%;
+  transform:scale(1.34);transform-origin:center 30%}
+.role{font-size:14px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--sky)}
+
+/* ── Cover specifics ──────────────────────────────────── */
+.logo-mark{display:flex;align-items:center;gap:14px}
+.logo-mark .m{width:60px;height:60px;border-radius:19px;display:grid;place-items:center;
+  background:linear-gradient(145deg,var(--sky-200),var(--blue) 75%);
+  box-shadow:var(--shadow-out), inset 0 1px 0 rgba(255,255,255,.5);font-size:29px;color:#06182e;font-weight:800}
+.logo-mark .nm{font-size:26px;font-weight:800;letter-spacing:-.02em}
+.logo-mark .nm em{font-style:normal;color:var(--sky)}
+
+/* ── Chrome / navigation ──────────────────────────────── */
+#hud{position:fixed;left:0;right:0;bottom:0;z-index:50;display:flex;align-items:center;
+  justify-content:space-between;padding:14px 26px;pointer-events:none}
+#hud>*{pointer-events:auto}
+.brandline{display:flex;align-items:center;gap:11px;font-size:12.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--muted-2);font-weight:700}
+.brandline i{width:8px;height:8px;border-radius:50%;background:var(--sky);box-shadow:0 0 12px var(--sky)}
+#dots{display:flex;gap:7px;align-items:center;padding:9px 13px;border-radius:100px;
+  background:rgba(7,20,44,.72);box-shadow:var(--shadow-soft);border:1px solid var(--line);
+  backdrop-filter:blur(8px);flex-wrap:wrap;max-width:58vw;justify-content:center}
+#dots button{width:9px;height:9px;padding:0;border:none;border-radius:50%;cursor:pointer;
+  background:rgba(124,192,255,.28);transition:.25s}
+#dots button:hover{background:var(--sky-400);transform:scale(1.35)}
+#dots button.on{width:26px;border-radius:100px;background:linear-gradient(90deg,#fff,var(--sky))}
+#navbtns{display:flex;gap:9px;align-items:center}
+.nbtn{
+  width:42px;height:42px;border-radius:14px;border:1px solid var(--line);cursor:pointer;
+  background:linear-gradient(150deg,#12305e,#0a1c39);color:var(--sky-200);
+  box-shadow:var(--shadow-soft);font-size:16px;display:grid;place-items:center;transition:.22s;
+  font-family:inherit;font-weight:700
+}
+.nbtn:hover{color:#fff;transform:translateY(-2px);box-shadow:var(--shadow-out)}
+.nbtn:active{transform:translateY(0)}
+#counter{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);
+  padding:0 8px;min-width:66px;text-align:center}
+#bar{position:fixed;top:0;left:0;height:3px;z-index:60;width:0%;
+  background:linear-gradient(90deg,var(--blue),var(--sky),#fff);
+  box-shadow:0 0 16px rgba(124,192,255,.7);transition:width .45s ease;border-radius:0 3px 3px 0}
+.hint{position:fixed;right:26px;bottom:78px;z-index:50;font-size:12px;color:var(--muted-2);
+  letter-spacing:.06em;opacity:.85}
+.kbd{display:inline-block;padding:2px 7px;border-radius:6px;background:rgba(124,192,255,.12);
+  border:1px solid var(--line);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--sky-200)}
+
+/* ── Animations ───────────────────────────────────────── */
+@keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-11px)}}
+@keyframes glowpulse{0%,100%{opacity:.5}50%{opacity:1}}
+.slide.is-active .anim{animation:rise .7s cubic-bezier(.2,.75,.25,1) backwards}
+.d1{animation-delay:.06s}.d2{animation-delay:.13s}.d3{animation-delay:.2s}
+.d4{animation-delay:.27s}.d5{animation-delay:.34s}.d6{animation-delay:.41s}
+.d7{animation-delay:.48s}.d8{animation-delay:.55s}.d9{animation-delay:.62s}
+.float{animation:floaty 6s ease-in-out infinite}
+.pulse{animation:glowpulse 2.6s ease-in-out infinite}
+
+/* ── Print / PDF ──────────────────────────────────────── */
+@media print{
+  body{overflow:visible;background:#050f22}
+  body::before,#hud,#bar,.hint{display:none !important}
+  #viewport{position:static}
+  #stage{position:static;width:auto;height:auto;transform:none;display:block}
+  .slide{position:relative;opacity:1;visibility:visible;transform:none;height:96vh;
+    page-break-after:always;break-after:page;inset:auto}
+  .card,.shot,.badge{box-shadow:none !important}
+}
+@media (max-width:1100px){ .hint{display:none} }
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<div id="viewport"><div id="stage">
+<!-- ═══════════ 01 · COVER ═══════════ -->
+<section class="slide" data-title="Cover">
+  <div class="row" style="align-items:center;gap:52px">
+    <div class="col" style="flex:1.06;gap:24px">
+      <div class="logo-mark anim"><div class="m">⚡</div><div class="nm">hamyon<em>API</em></div></div>
+      <div class="eyebrow anim d1">Pitch Deck · 2026 · Tashkent</div>
+      <h1 class="anim d2">Telegram botingiz<br>endi <span class="hl">pul qabul<br>qiladi</span> — 5–30 sekundda.</h1>
+      <p class="lead anim d3" style="max-width:620px">HUMO va UZCARD kartangizga tushgan to'lovni real vaqtda aniqlaymiz.
+        Sizga faqat bitta <b>POST /payment/create</b> qoladi — <b>cron, kuzatuvchi va shartnoma shart emas.</b></p>
+      <div class="chip-row anim d4">
+        <span class="badge on">⚡ 5–30s aniqlash</span>
+        <span class="badge">💳 HUMO + UZCARD</span>
+        <span class="badge">🕒 24/7 ishlaydi</span>
+        <span class="badge">🔒 Mablag'ga tegmaymiz</span>
+      </div>
+      <div class="chip-row anim d5" style="margin-top:6px;align-items:center">
+        <span class="pill-num">hamyon-api.uz</span><span style="color:var(--muted-2)">·</span>
+        <span class="pill-num">@HamyonAPIBot</span><span style="color:var(--muted-2)">·</span>
+        <span class="pill-num">15 000 so'm / oy</span>
+      </div>
+    </div>
+    <div class="col" style="flex:.94">
+      <div class="shot float anim d3" style="height:470px">
+        <img src="assets/hero.jpg" alt="HamyonAPI — Telegram botda avtomatik to'lov tasdiqlanishi">
+        <span class="badge tag">💸 status: paid · 12s</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 02 · MUAMMO ═══════════ -->
+<section class="slide" data-title="Muammo">
+  <div class="slide-head">
+    <div class="txt"><span class="eyebrow">01 · Muammo</span>
+      <h2>Onlayn savdoda <span class="hl-u">to'lovni qabul qilish</span> — hamon eng og'ir qadam</h2></div>
+    <span class="badge">O'zbekistondagi kichik biznes real ahvoli</span>
+  </div>
+  <div class="row" style="gap:24px">
+    <div class="col" style="flex:1.15;gap:20px">
+      <div class="grid g2" style="gap:20px">
+        <div class="card feat card-hover anim d1"><div class="icon">👀</div><h3>Qo'lda solishtirish</h3>
+          <p>Admin SMS va pul bildirishnomalarini ko'z bilan tekshiradi. Kechasi, dam olish kunlari ham.
+          Bir xato — <b>mahsulot bepul ketadi</b>.</p></div>
+        <div class="card feat card-hover anim d2"><div class="icon">⏳</div><h3>Mijoz kutadi — ketadi</h3>
+          <p>Tasdiqlash 10–40 daqiqa. Shu sababli buyurtmalarning sezilarli qismi <b>yopilmay qoladi</b>:
+          mijoz "aldashmi-yo'qmi" deb shubha qiladi.</p></div>
+        <div class="card feat card-hover anim d3"><div class="icon">🏦</div><h3>Akquiring — uzoq va qimmat</h3>
+          <p>Shartnoma, yuridik shaxs, hisob-raqam, tekshiruv, 1–4 hafta kutish va
+          <b>1,5–2,5% komissiya</b>. Kichik sotuvchining aksariyati shu bosqichda charchaydi.</p></div>
+        <div class="card feat card-hover anim d4"><div class="icon">🎭</div><h3>Firibgarlik va dublikat</h3>
+          <p>Soxta skrinshot, "pul keyinroq tushadi", bir summada ikkita mijoz. Buni faqat dastur hal qiladi — <b>texnik jamoasiz</b> esa deyarli imkonsiz.</p></div>
+      </div>
+      <div class="card flat anim d5" style="display:flex;gap:22px;align-items:center;padding:20px 26px">
+        <div class="icon" style="border-radius:50%">🧩</div>
+        <p style="font-size:16px"><b>Natija:</b> savdo Telegram/Instagram'da, to'lov esa hali ham "qo'l terakasida".
+        Bot yozishni biladigan tadbirkor ham to'lov oqimini avtomatlashtira olmaydi — chunki bu
+        <b>bank ma'lumotlari, webhook va xavfsizlik</b> haqidagi alohida loyiha.</p>
+      </div>
+    </div>
+    <div class="col" style="flex:.85;gap:20px">
+      <div class="shot anim d2" style="height:340px">
+        <img src="assets/problem.jpg" alt="To'lovlarni qo'lda tekshirayotgan sotuvchi">
+        <span class="badge tag">🕐 02:14 · navbatdagi 6 ta to'lov</span>
+      </div>
+      <div class="card sunk anim d4" style="padding:22px 24px">
+        <div class="kicker" style="margin-bottom:12px">Bugungi xarajat (1 do'kon)</div>
+        <div class="grid g2" style="gap:14px">
+          <div><div style="font-size:31px;font-weight:800;color:#fff">~34 <span style="font-size:15px;color:var(--muted)">soat/oy</span></div>
+            <p style="font-size:13px">to'lov qabul qilishga ketadi</p></div>
+          <div><div style="font-size:31px;font-weight:800;color:#fff">~22% <span style="font-size:15px;color:var(--muted)">buyurtma</span></div>
+            <p style="font-size:13px">uzoq kutish tufayli yopilmaydi</p></div>
+        </div>
+        <div class="divider"></div>
+        <p style="font-size:13px;color:var(--muted-2)">Baho: HamyonAPI so'rovnomalari va ochiq ma'lumotlar asosida · pitch hisobi</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 03 · YECHIM ═══════════ -->
+<section class="slide" data-title="Yechim">
+  <div class="slide-head">
+    <div class="txt"><span class="eyebrow">02 · Yechim</span>
+      <h2>Bitta API — <span class="hl">to'lovni biz kuzatamiz</span>, natija sizning botingizga o'zi qaytadi</h2></div>
+    <span class="badge on">⚡ HamyonAPI</span>
+  </div>
+  <div class="row" style="gap:26px;align-items:stretch">
+    <div class="col" style="flex:1.02;gap:18px">
+      <div class="card anim d1" style="padding:26px 28px">
+        <div class="kicker">Sizning vazifangiz — 2 ta qadam</div>
+        <ul class="clean" style="margin-top:14px">
+          <li><b>POST /payment/create</b> — shop_id, shop_key, amount yuborasiz.</li>
+          <li><b>complete_url</b> ga kelgan <b>paid / cancel</b> ni qabul qilib, <b>200</b> qaytarasiz.</li>
+        </ul>
+        <div class="divider"></div>
+        <div class="kicker">Bizning vazifamiz</div>
+        <ul class="clean" style="margin-top:14px">
+          <li>Kartangizga kelgan xabarnomalarni <b>har bir necha soniyada</b> o'qiydi va summani solishtiradi.</li>
+          <li>5 daqiqa ichida pul topilmasa — <b>cancel</b> yuboriladi. "Javobsiz" to'lov qolmaydi.</li>
+          <li>Callback yetib bormasa — <b>3, 10, 30, 60 sekunddan</b> keyin qayta yuboriladi.</li>
+        </ul>
+      </div>
+      <div class="grid g3" style="gap:16px">
+        <div class="card flat anim d3" style="padding:18px 20px;text-align:center">
+          <div style="font-size:29px;font-weight:800;color:#fff">0<small style="font-size:14px;color:var(--muted)"> ta</small></div>
+          <p style="font-size:13.4px;margin-top:4px">cron, worker,<br>so'rab turish</p></div>
+        <div class="card flat anim d4" style="padding:18px 20px;text-align:center">
+          <div style="font-size:29px;font-weight:800;color:#fff">~10<small style="font-size:14px;color:var(--muted)"> daq</small></div>
+          <p style="font-size:13.4px;margin-top:4px">ulanish vaqti<br>registratsiyadan</p></div>
+        <div class="card flat anim d5" style="padding:18px 20px;text-align:center">
+          <div style="font-size:29px;font-weight:800;color:#fff">15 000<small style="font-size:14px;color:var(--muted)"> so'm</small></div>
+          <p style="font-size:13.4px;margin-top:4px">oyiga, komissiyasiz</p></div>
+      </div>
+    </div>
+    <div class="col" style="flex:1;gap:16px">
+      <div class="shot anim d2" style="height:300px">
+        <img src="assets/solution.jpg" alt="Bot — API — karta — webhook arxitekturasi">
+        <span class="badge tag">🔗 bot → API → karta → webhook</span>
+      </div>
+      <div class="card sunk anim d4" style="padding:0">
+        <div style="padding:18px 22px 6px"><div class="code-bar"><i class="dot r"></i><i class="dot y"></i><i class="dot g"></i>
+          <span class="pill-num" style="margin-left:6px">Sizning kodingiz — butun integratsiya</span></div></div>
+        <div class="code" style="padding:6px 22px 22px"><span class="c"># 1. To'lov yaratish</span>
+<span class="k">await</span> bot_api.<span class="m">create_payment</span>(amount=<span class="n">50_000</span>, order_id=<span class="s">"ORD-1024"</span>)
+
+<span class="c"># 2. Mijozga kartani ko'rsatish (biz qaytaramiz)</span>
+<span class="k">await</span> msg.<span class="m">answer</span>(<span class="s">"To'lov: 8600 12** **** 9012"</span>)
+
+<span class="c"># 3. Webhook — holatni o'zi keladi</span>
+<span class="k">@router</span>.<span class="m">post</span>(<span class="s">"/hamyon/complete"</span>)
+<span class="k">async def</span> <span class="m">done</span>(p: <span class="m">Payment</span>):
+    <span class="k">if</span> p.<span class="m">sign</span> == md5(p.shop_id + p.id + p.amount + KEY):
+        <span class="k">await</span> db.<span class="m">mark_paid</span>(p.order_id)   <span class="c"># idempotent</span>
+    <span class="k">return</span> <span class="m">Response</span>(status_code=<span class="n">200</span>)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 04 · QANDAY ISHLAYDI ═══════════ -->
+<section class="slide" data-title="Qanday ishlaydi">
+  <div class="slide-head">
+    <div class="txt"><span class="eyebrow">03 · Mahsulot</span>
+      <h2>4 qadamda ishga tushadi</h2></div>
+    <p style="max-width:430px;font-size:15px">Developerga ham, "qo'l bilan sotadigan" tadbirkorga ham bir xil oson —
+      panel kerak emas, hammasi Telegram ichida.</p>
+  </div>
+  <div class="grid g4 anim d1" style="gap:20px">
+    <div class="card step"><div class="sn">01</div><div><h3>@HamyonAPIBot ni boshlang</h3>
+      <p>/start → bot sizga <b>shop_id</b> va <b>shop_key</b> beradi. Ro'yxatdan o'tish, karta, shartnoma yo'q.</p></div></div>
+    <div class="card step"><div class="sn">02</div><div><h3>Karta botini ulang</h3>
+      <p><b>@HumoCardBot</b> (HUMO) yoki <b>@CardXabarBot</b> (UZCARD) orqali xabarnomalarni ulashtiring. Bir nechta karta mumkin.</p></div></div>
+    <div class="card step"><div class="sn">03</div><div><h3>To'lov yarating</h3>
+      <p>API javobida <b>payment_id</b> va karta raqami qaytadi — uni mijozga ko'rsatasiz — keyingi ish bizda.</p></div></div>
+    <div class="card step"><div class="sn">04</div><div><h3>Natijani biz yuboramiz</h3>
+      <p>Pul tushishi bilan <b>complete_url</b> ga <b>paid</b>, 5 daqiqada topilmasa <b>cancel</b>. Kuzatuv bizda.</p></div></div>
+  </div>
+  <div class="row" style="gap:22px;margin-top:22px;flex:1">
+    <div class="card sunk anim d3" style="flex:1.15;padding:0">
+      <div style="padding:18px 22px 4px"><div class="code-bar"><i class="dot r"></i><i class="dot y"></i><i class="dot g"></i>
+        <span class="pill-num" style="margin-left:6px">POST https://hamyon-api.uz/payment/create</span></div></div>
+      <div class="code" style="padding:4px 22px 20px">shop_id=<span class="n">12</span>&amp;shop_key=<span class="s">sk_xxxxxxxx</span>&amp;amount=<span class="n">50000</span>&amp;order_id=<span class="s">ORD-1024</span>
+
+<span class="c">// 200 OK</span>
+{
+  <span class="k">"payment_id"</span>: <span class="s">"a1b2c3d4e5f6"</span>,
+  <span class="k">"order_id"</span>:   <span class="s">"ORD-1024"</span>,
+  <span class="k">"amount"</span>:     <span class="n">50000</span>,
+  <span class="k">"card"</span>:       <span class="s">"8600 1234 5678 9012"</span>,
+  <span class="k">"expires_in"</span>: <span class="n">300</span>,          <span class="c">// soniya</span>
+  <span class="k">"message"</span>:    <span class="s">"To'lov muvaffaqiyatli yaratildi!"</span>
+}</div>
+    </div>
+    <div class="col" style="flex:.85;gap:16px">
+      <div class="card flat anim d4" style="padding:20px 22px">
+        <div class="kicker" style="margin-bottom:13px">Holat mashinasi</div>
+        <div class="chip-row" style="gap:9px">
+          <span class="badge">🔔 prepare</span><span style="color:var(--muted-2)">→</span>
+          <span class="badge">⏳ pending · 5 daq</span><span style="color:var(--muted-2)">→</span>
+          <span class="badge on">✅ paid</span><span style="color:var(--muted-2)">/</span>
+          <span class="badge">❌ cancel (timeout)</span>
+        </div>
+        <p style="font-size:13.6px;margin-top:13px">Har bir to'lov <b>albatta bitta</b> yakuniy callback bilan tugaydi.</p>
+      </div>
+      <div class="card flat anim d5" style="padding:20px 22px">
+        <div class="kicker" style="margin-bottom:12px">Texnik detallar</div>
+        <ul class="clean" style="gap:9px">
+          <li style="font-size:14.6px">Callback imzosi: <b>md5(shop_id + payment_id + amount + shop_key)</b></li>
+          <li style="font-size:14.6px">Bir xil summadagi 2 ochiq to'lov bloklanadi → <b>50 000 → 50 001</b> kichik o'zgarish bilan ajratiladi</li>
+          <li style="font-size:14.6px">GET /payment/status — ixtiyoriy qo'l tekshiruvi uchun</li>
+          <li style="font-size:14.6px">POST /payment/cancel — mijoz voz kechsa muddatni kutmang</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 05 · IMKONIYATLAR ═══════════ -->
+<section class="slide" data-title="Imkoniyatlar">
+  <div class="slide-head">
+    <div class="txt"><span class="eyebrow">04 · Nima uchun biz</span>
+      <h2>Kuchli imkoniyatlar — <span class="hl">oddiy interfeys</span> ostida</h2></div>
+    <span class="badge">REST API · Webhook · Telegram panel</span>
+  </div>
+  <div class="grid g4" style="gap:19px;flex:1">
+    <div class="card feat card-hover anim d1"><span class="num">01</span><div class="icon">⚡</div>
+      <h3>Real-time aniqlash</h3><p>To'lov 5–30 soniyada avtomatik aniqlanadi. Mijoz kutmaydi — konversiya o'sadi.</p></div>
+    <div class="card feat card-hover anim d2"><span class="num">02</span><div class="icon">🔒</div>
+      <h3>To'liq xavfsiz</h3><p>Tizim faqat xabarnomalarni <b>o'qiydi</b>. Mablag'ni ko'chirish imkoni yo'q — karta ma'lumoti faqat sizda.</p></div>
+    <div class="card feat card-hover anim d3"><span class="num">03</span><div class="icon">💳</div>
+      <h3>2 ta karta tizimi</h3><p>HUMO va UZCARD — O'zbekistondagi barcha asosiy oqim. Bir vaqtda bir nechta karta.</p></div>
+    <div class="card feat card-hover anim d4"><span class="num">04</span><div class="icon">🤖</div>
+      <h3>Telegram integratsiya</h3><p>Barcha boshqaruv bot ichida: tranzaksiyalar, sozlamalar, hisobot. Alohida admin-panel kerak emas.</p></div>
+    <div class="card feat card-hover anim d5"><span class="num">05</span><div class="icon">🧬</div>
+      <h3>Oddiy REST API</h3><p>Har qanday til: Python, PHP, Node, Go, 1C. Tayyor kod namunalari hujjatlarda.</p></div>
+    <div class="card feat card-hover anim d6"><span class="num">06</span><div class="icon">🕒</div>
+      <h3>24/7 ishlash</h3><p>Kechayu kunduz, texnik tanaffussiz. Tushdan keyingi soatlarda ham savdo to'xtamaydi.</p></div>
+    <div class="card feat card-hover anim d7"><span class="num">07</span><div class="icon">🔔</div>
+      <h3>Webhook + qayta urinish</h3><p>prepare/complete callback'lar va retry (3/10/30/60s) — birorta to'lov e'tiborsiz qolmaydi.</p></div>
+    <div class="card feat card-hover anim d8"><span class="num">08</span><div class="icon">📈</div>
+      <h3>Premium statistika</h3><p>Konversiya, o'rtacha chek, eng faol soatlar, timeout tahlili — qaror uchun, chiroy uchun emas.</p></div>
+  </div>
+  <div class="card flat anim d9" style="margin-top:19px;padding:18px 24px;display:flex;align-items:center;gap:20px">
+    <span class="badge on" style="flex:none">💡 Pitch nuqta</span>
+    <p style="font-size:15.5px">Raqobalar <b>to'lovni</b> sotadi. Biz <b>vaqtni</b> sotamiz: 34 soat/oy va 1 oylik shartnoma kutishni
+      10 daqiqalik integratsiyaga aylantiramiz.</p>
+  </div>
+</section>
+
+<!-- ═══════════ 06 · PREMIUM STATISTIKA ═══════════ -->
+<section class="slide" data-title="Premium statistika">
+  <div class="slide-head">
+    <div class="txt"><span class="eyebrow">05 · Qo'shimcha daromad</span>
+      <h2>Premium statistika — <span class="hl">5 000 so'm</span>, lekin LTV ni 2 barobar oshiradi</h2></div>
+    <span class="badge">📊 Add-on · oyiga</span>
+  </div>
+  <div class="row" style="gap:26px;align-items:stretch">
+    <div class="col" style="flex:1;gap:18px">
+      <div class="grid g2" style="gap:16px">
+        <div class="card flat anim d1" style="padding:20px 22px"><div class="icon" style="width:44px;height:44px;font-size:20px">🎯</div>
+          <h3 style="margin:12px 0 6px">To'lov konversiyasi</h3><p style="font-size:14px">create → paid nisbati, cancel sabablari va foizi.</p></div>
+        <div class="card flat anim d2" style="padding:20px 22px"><div class="icon" style="width:44px;height:44px;font-size:20px">🧾</div>
+          <h3 style="margin:12px 0 6px">O'rtacha chek va GMV</h3><p style="font-size:14px">Kun / hafta / oy kesimida, dinamikaga qarab.</p></div>
+        <div class="card flat anim d3" style="padding:20px 22px"><div class="icon" style="width:44px;height:44px;font-size:20px">🕐</div>
+          <h3 style="margin:12px 0 6px">Faol soatlar issiqlik xaritasi</h3><p style="font-size:14px">Qachon reklama yoqish, qachon off-line bo'lish kerak.</p></div>
+        <div class="card flat anim d4" style="padding:20px 22px"><div class="icon" style="width:44px;height:44px;font-size:20px">👤</div>
+          <h3 style="margin:12px 0 6px">Qaytaruvchi mijozlar</h3><p style="font-size:14px">Top xaridorlar, chastota, retention kohortalar.</p></div>
+        <div class="card flat anim d5" style="padding:20px 22px"><div class="icon" style="width:44px;height:44px;font-size:20px">⚠️</div>
+          <h3 style="margin:12px 0 6px">Alert'lar Telegram'ga</h3><p style="font-size:14px">Timeout oshsa yoki shubhali summalar takrorlansa — darhol xabar.</p></div>
+        <div class="card flat anim d6" style="padding:20px 22px"><div class="icon" style="width:44px;height:44px;font-size:20px">📥</div>
+          <h3 style="margin:12px 0 6px">CSV / JSON eksport</h3><p style="font-size:14px">Buxgalteriya, CRM va 1C ga uzluksiz uzatish.</p></div>
+      </div>
+      <div class="card anim d7" style="padding:20px 24px;display:flex;gap:20px;align-items:center">
+        <div class="icon" style="border-radius:50%;flex:none">🧠</div>
+        <p style="font-size:15.4px"><b>Nega muhim:</b> add-on mijozni "to'lov quvuri"dan <b>operatsion panelga</b> bog'laydi.
+        Statistika o'rgangan odat — churn ni pasaytiradi va premium paketni keyingi yilga ham ushlab qoladi.</p>
+      </div>
+    </div>
+    <div class="col" style="flex:.92;gap:18px">
+      <div class="shot anim d2" style="height:392px">
+        <img src="assets/analytics.jpg" alt="HamyonAPI premium statistika paneli">
+        <span class="badge tag">📊 Haftalik hisobot · GMV +18%</span>
+      </div>
+      <div class="card sunk anim d4" style="padding:22px 24px;display:flex;align-items:center;gap:22px">
+        <div><div class="kicker">Add-on narxi</div>
+          <div style="font-size:37px;font-weight:800;color:#fff;margin-top:6px">5 000 <span style="font-size:15px;color:var(--muted)">so'm / oy</span></div></div>
+        <div style="width:1px;align-self:stretch;background:var(--line)"></div>
+        <p style="font-size:14.2px">Asosiy obunaga ulanadi: <b>15 000 + 5 000 = 20 000 so'm</b>.
+        O'rtacha ARPU bahosi: <b>17 000 so'm</b> (≈40% mijoz premium oladi).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 07 · XAVFSIZLIK ═══════════ -->
+<section class="slide" data-title="Xavfsizlik">
+  <div class="slide-head">
+    <div class="txt"><span class="eyebrow">06 · Ishonch</span>
+      <h2>Xavfsizlik — bu <span class="hl">marketing emas</span>, arxitektura</h2></div>
+    <span class="badge">🔒 Read-only model</span>
+  </div>
+  <div class="row" style="gap:26px;align-items:stretch">
+    <div class="col" style="flex:1;gap:16px">
+      <div class="card anim d1" style="padding:24px 26px">
+        <div style="display:flex;gap:16px;align-items:center;margin-bottom:16px">
+          <div class="icon">🛡️</div><h3>Biz mablag'ga umuman tegmaymiz</h3></div>
+        <p style="font-size:16px">To'lov sizning shaxsiy kartangizga o'tkaziladi. HamyonAPI faqat
+          <b>karta xabarnomasini o'qiydi</b> va solishtiradi — o'tkazma, yechish, blokash
+          imkoniyati tizimda <b>mavjud emas</b>. Bu — xavf maydonini keskin qisqartiradi.</p>
+      </div>
+      <div class="grid g2" style="gap:16px">
+        <div class="card flat anim d3" style="padding:20px 22px"><h3 style="margin-bottom:9px;font-size:17px">🖋 Imzo va tekshiruv</h3>
+          <p style="font-size:14.4px">Har callback <b>md5 sign</b> bilan tasdiqlanadi; shop_key faqat server tomonida.</p></div>
+        <div class="card flat anim d4" style="padding:20px 22px"><h3 style="margin-bottom:9px;font-size:17px">🔁 Idempotentlik</h3>
+          <p style="font-size:14.4px">Retry tufayli callback ikki marta kelishi mumkin — <b>payment_id</b> bo'yicha takrorlanishni bloklang.</p></div>
+        <div class="card flat anim d5" style="padding:20px 22px"><h3 style="margin-bottom:9px;font-size:17px">🧱 Izolyatsiya</h3>
+          <p style="font-size:14.4px">Har do'kon o'z shop_id/doirasida; bitta mijozning kartasi boshqasiga ko'rinmaydi.</p></div>
+        <div class="card flat anim d6" style="padding:20px 22px"><h3 style="margin-bottom:9px;font-size:17px">👮 Antifraud qatlami</h3>
+          <p style="font-size:14.4px">Bir xil summadagi parallel to'lovlar cheklangan, shubhali patternlar loglanadi, limitlar qo'yiladi.</p></div>
+      </div>
+    </div>
+    <div class="col" style="flex:.86;gap:16px">
+      <div class="shot anim d2" style="height:326px">
+        <img src="assets/security.jpg" alt="Xavfsizlik: faqat o'qish rejimidagi kuzatuv">
+      </div>
+      <div class="card sunk anim d4" style="padding:22px 24px">
+        <div class="kicker" style="margin-bottom:12px">Xavfsizlik bo'yicha majburiyatlar</div>
+        <ul class="clean" style="gap:10px">
+          <li style="font-size:14.6px">24/7 monitoring va status-page</li>
+          <li style="font-size:14.6px">Yangilanishlar haqida oldindan xabar (@HamyonAPI kanali)</li>
+          <li style="font-size:14.6px">To'lov tarixi doim eksportga ochiq — vendor lock-in yo'q</li>
+          <li style="font-size:14.6px">Ma'lumotlar O'zbekiston hududidagi infratuzilmanda</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 08 · BOZOR ═══════════ -->
+<section class="slide" data-title="Bozor">
+  <div class="slide-head">
+    <div class="txt"><span class="eyebrow">07 · Bozor</span>
+      <h2>O'zbekiston — Jahondagi <span class="hl">eng tez raqamlashayotgan</span> bozorlardan biri</h2></div>
+    <span class="badge">Manbalar: KPMG, Statista, ECDB, soha hisobotlari</span>
+  </div>
+  <div class="grid g3 anim d1" style="gap:19px">
+    <div class="card stat"><div class="v">$1,5 <small>mlrd</small></div>
+      <div class="l">E-commerce hajmi (2024) → 2026-yilgi taxmin <b>~$2,1 mlrd</b></div>
+      <div class="sub">Yillik o'sish: 40%+ · penetration atigi ~3%</div></div>
+    <div class="card stat"><div class="v">$3,2 <small>mlrd</small></div>
+      <div class="l">Raqamli savdo tranzaksiya hajmi (2024) → 2028 yilda $4,7 mlrd</div>
+      <div class="sub">Statista Digital Commerce · CAGR 10,2%</div></div>
+    <div class="card stat"><div class="v">29,5 <small>mln</small></div>
+      <div class="l">Internet foydalanuvchilari — aholining 83%</div>
+      <div class="sub">O'zbekiston hududi, 2026</div></div>
+    <div class="card stat"><div class="v">~85%<small></small></div>
+      <div class="l">Internet auditoriyasining Telegram'ga yetib borishi — eng kuchli kanal</div>
+      <div class="sub">Buyurtmalarning ~50% Telegram/Instagram orqali</div></div>
+    <div class="card stat"><div class="v">45%<small></small></div>
+      <div class="l">Naqd pul ulushi (2020-yilda 78% edi) — naqdsiz to'lovlar keskin o'smoqda</div>
+      <div class="sub">Click 12 mln+, Payme 8 mln+ foydalanuvchi</div></div>
+    <div class="card stat"><div class="v">500 000+</div>
+      <div class="l">Ro'yxatdan o'tgan tadbirkorlik subyekti — ulardan <b>~55 000 tasi</b> onlayn savdoda</div>
+      <div class="sub">Segmentimiz: kichik biznes + bot xo'jaliklari</div></div>
+  </div>
+  <div class="row" style="gap:20px;margin-top:20px;flex:1">
+    <div class="card anim d3" style="flex:1.1;padding:22px 26px">
+      <div class="kicker" style="margin-bottom:12px">Nega ayni hozir? · 3 ta siljituvchi kuch</div>
+      <div class="grid g3" style="gap:16px">
+        <div><h3 style="font-size:16.5px;color:var(--sky);margin-bottom:6px">1 · Kanal ko'chdi</h3>
+          <p style="font-size:14px">Savdo marketplace'dan ko'ra Telegram/Instagram chat'ida ko'proq. Chat-funnelda esa standart kassa ishlamaydi.</p></div>
+        <div><h3 style="font-size:16.5px;color:var(--sky);margin-bottom:6px">2 · Akquiring cheklangan</h3>
+          <p style="font-size:14px">Yirik to'lov provayderlari yuridik shaxslar bilan ishlaydi, komissiya va byurokratiya kichik sotuvchiga mos emas.</p></div>
+        <div><h3 style="font-size:16.5px;color:var(--sky);margin-bottom:6px">3 · Bot iqtisodiyoti</h3>
+          <p style="font-size:14px">Mini-app va obuna asosidagi xizmatlar portlayapti — ularga pul oqimi kerak, litsenziyasiz.</p></div>
+      </div>
+    </div>
+    <div class="shot anim d2" style="flex:.9;height:auto;min-height:170px">
+      <img src="assets/cards.jpg" alt="UZCARD va HUMO kartalari" style="object-fit:cover">
+      <span class="badge tag">💳 HUMO + UZCARD = 100% ichki bozor</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 09 · TAM / SAM / SOM ═══════════ -->
+<section class="slide" data-title="TAM SAM SOM">
+  <div class="slide-head">
+    <div class="txt"><span class="eyebrow">08 · Bozor hajmi</span>
+      <h2>TAM · SAM · SOM</h2></div>
+    <p style="max-width:520px;font-size:14.6px">Hisob-kitob ikki yo'l bilan tekshirilgan: pastdan-yuqoriga (bizneslar soni × ARPU) va yuqoridan-pastga
+      (GMV × to'lov infratuzilmasi ulushi) — ikkala yo'l yaqin natija beradi. 1 $ ≈ 12 800 so'm.</p>
+  </div>
+  <div class="row" style="gap:30px;align-items:center">
+    <div class="tss-wrap">
+      <svg viewBox="0 0 560 520" style="width:100%;max-width:540px;height:auto">
+        <defs>
+          <linearGradient id="gT2" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#1d4d8f" stop-opacity=".55"/>
+            <stop offset="100%" stop-color="#0a1c3c" stop-opacity=".25"/>
+          </linearGradient>
+          <linearGradient id="gS" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#2f7fe8" stop-opacity=".78"/>
+            <stop offset="100%" stop-color="#1a4d92" stop-opacity=".5"/>
+          </linearGradient>
+          <linearGradient id="gO" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#eaf5ff"/>
+            <stop offset="100%" stop-color="#7cc0ff"/>
+          </linearGradient>
+        </defs>
+        <g style="filter:drop-shadow(0 24px 44px rgba(2,8,20,.75))">
+          <circle cx="280" cy="268" r="248" fill="url(#gT2)" stroke="rgba(124,192,255,.30)" stroke-width="1.6"/>
+          <circle cx="280" cy="300" r="160" fill="url(#gS)" stroke="rgba(191,224,255,.42)" stroke-width="1.6"/>
+          <circle cx="280" cy="330" r="80" fill="url(#gO)" stroke="rgba(255,255,255,.6)" stroke-width="1.4"/>
+        </g>
+        <text x="280" y="52" text-anchor="middle" fill="#bfe0ff" font-size="20" font-weight="800" font-family="Manrope,sans-serif" letter-spacing="3">TAM</text>
+        <text x="280" y="78" text-anchor="middle" fill="#9ab4d8" font-size="14.5" font-family="Manrope,sans-serif">Raqamli savdo uchun to'lov infratuzilmasi</text>
+        <text x="280" y="99" text-anchor="middle" fill="#eaf3ff" font-size="19" font-weight="800" font-family="Manrope,sans-serif">≈ $29 mln / 370 mlrd so'm · yiliga</text>
+        <text x="280" y="196" text-anchor="middle" fill="#eaf3ff" font-size="18" font-weight="800" font-family="Manrope,sans-serif" letter-spacing="2.6">SAM</text>
+        <text x="280" y="219" text-anchor="middle" fill="#c8defc" font-size="13.6" font-family="Manrope,sans-serif">Telegram-bot &amp; onlayn-do'kon segmenti</text>
+        <text x="280" y="240" text-anchor="middle" fill="#fff" font-size="17" font-weight="800" font-family="Manrope,sans-serif">11,2 mlrd so'm · ≈ $0,9 mln</text>
+        <text x="280" y="322" text-anchor="middle" fill="#06182e" font-size="18" font-weight="800" font-family="Manrope,sans-serif" letter-spacing="2.6">SOM</text>
+        <text x="280" y="346" text-anchor="middle" fill="#06182e" font-size="13.4" font-weight="700" font-family="Manrope,sans-serif">3 yil · 5 000 obunachi</text>
+        <text x="280" y="368" text-anchor="middle" fill="#08214a" font-size="17" font-weight="800" font-family="Manrope,sans-serif">1,0 mlrd so'm ARR</text>
+      </svg>
+      <p style="text-align:center;font-size:13px;color:var(--muted-2);margin-top:-6px">
+        Nisbat: TAM → SAM → SOM = <b style="color:var(--sky-200)">100% → 3,0% → 0,27%</b> (yillik oqim bo'yicha)</p>
+    </div>
+    <div class="col" style="flex:.94;gap:14px">
+      <div class="card tss-item anim d2" style="padding:18px 22px">
+        <div class="swatch" style="background:linear-gradient(140deg,#2f7fe8,#12305e)"></div>
+        <div><div class="v">$29 mln <span class="pct">/ TAM · 370 mlrd so'm</span></div>
+          <p style="font-size:14px;margin-top:5px">250 000 faol raqamli sotuvchi va xizmat ko'rsatuvchi × o'rtacha
+            <b>$116 / yil</b> (obuna + to'lov komissiyasi qoldig'i). Top-down: GMV ~$2,1 mlrd × ~1,4% → yaqin natija.</p></div>
+      </div>
+      <div class="card tss-item anim d4" style="padding:18px 22px">
+        <div class="swatch" style="background:linear-gradient(140deg,#7cc0ff,#2f7fe8)"></div>
+        <div><div class="v">11,2 mlrd so'm <span class="pct">/ SAM · ≈ $0,9 mln</span></div>
+          <p style="font-size:14px;margin-top:5px"><b>55 000</b> biznes: Telegram-do'kon adminlari (40 000),
+            bot/xizmat xo'jaliklari (8 000), raqamli obunalar (7 000) × ARPU <b>204 000 so'm/yil</b>.</p></div>
+      </div>
+      <div class="card tss-item anim d6" style="padding:18px 22px;border-color:rgba(124,192,255,.34)">
+        <div class="swatch" style="background:linear-gradient(140deg,#ffffff,#7cc0ff)"></div>
+        <div><div class="v">1,0 mlrd so'm <span class="pct">/ SOM · 2029</span></div>
+          <p style="font-size:14px;margin-top:5px">SAM'ning <b>~9%</b> = 5 000 to'lovchi do'kon (MRR 85 mln so'm, ARR ≈ $80 000).
+            2028 yilda GMV komissiyasi (0,3%) qo'shilsa — <b>2,4 mlrd so'm+</b>.</p></div>
+      </div>
+      <div class="card flat sunk anim d8" style="padding:16px 20px">
+        <p style="font-size:13.6px;color:var(--muted)"><b style="color:var(--sky)">Kengayish:</b> Qozog'iston va Qirg'izistonda
+          shunga o'xshash karta-xabarnoma modellari mavjud — birinchi bosqichda <b>2,3×</b> bozor kengaymasi rejalashtirilgan.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 10 · RAQOBAT ═══════════ -->
+<section class="slide" data-title="Raqobat">
+  <div class="slide-head">
+    <div class="txt"><span class="eyebrow">09 · Raqobat</span>
+      <h2>Biz yirik to'lov tizimlari bilan <span class="hl">raqobatlashmaymiz</span> — ular yetib bormagan joyda o'ynaymiz</h2></div>
+    <span class="badge">Yechimlarni solishtirish</span>
+  </div>
+  <div class="card anim d1" style="padding:14px 22px 20px;flex:1">
+    <table>
+      <thead><tr>
+        <th style="width:20%">Yechim</th><th>Ulanish</th><th>Shartnoma / talab</th><th>HUMO · UZCARD</th>
+        <th>Cron / kuzatuvchi</th><th>Narx</th><th>Statistika</th>
+      </tr></thead>
+      <tbody>
+        <tr><td>🏦 Bank acquiring</td><td class="mid">1–4 hafta</td><td>Yuridik shaxs, shartnoma, hisob</td>
+          <td class="ok">✓</td><td class="mid">Sizda</td><td>1,5–2,5% + oylik</td><td class="no">✕</td></tr>
+        <tr><td>💠 Payme / Click / Uzum API</td><td class="mid">1–2 hafta</td><td>Ko'pincha yuridik shaxs + tekshiruv</td>
+          <td class="ok">✓ (o'z hamyoni)</td><td class="mid">Sizda</td><td>1,5–3% komissiya</td><td class="mid">qisman</td></tr>
+        <tr><td>⭐ Telegram Stars / Bot Payments</td><td class="ok">bir kunda</td><td class="ok">Yo'q</td>
+          <td class="no">✕ (Valuta cheklangan)</td><td class="mid">Sizda</td><td>~12,5% + blok</td><td class="no">✕</td></tr>
+        <tr><td>📱 Qo'lda tekshirish (hozirgi holat)</td><td class="ok">0 kun</td><td class="ok">Yo'q</td>
+          <td class="ok">✓</td><td class="no">Hammasi qo'lda</td><td>~34 soat/oy</td><td class="no">✕</td></tr>
+        <tr><td>🛠 Open-source shaxsiy watcher</td><td class="no">1–3 hafta</td><td class="ok">Yo'q</td>
+          <td class="mid">o'zingiz yozasiz</td><td class="no">Sizda + server</td><td>server + dev soati</td><td class="no">✕</td></tr>
+        <tr class="us"><td>⚡ HamyonAPI</td><td class="ok">~10 daqiqa</td><td class="ok">Talab qilinmaydi</td>
+          <td class="ok">✓ ikkalasi</td><td class="ok">Kerak emas</td><td>15 000 so'm / oy</td><td class="ok">✓ Premium</td></tr>
+      </tbody>
+    </table>
+    <div class="grid g3" style="gap:16px;margin-top:22px">
+      <div class="card flat anim d3" style="padding:18px 20px"><div class="kicker" style="margin-bottom:8px">Nisha</div>
+        <h3 style="font-size:17px;color:#fff">Chat-funnel = bizning maydon</h3>
+        <p style="font-size:13.6px;margin-top:7px">Yirik to'lov tizimlari "marketplace"ga qaratilgan; biz — 5 mln so'mlik oylik savdosi bo'lgan bitta operatorli do'konlarga.</p></div>
+      <div class="card flat anim d4" style="padding:18px 20px"><div class="kicker" style="margin-bottom:8px">Eslatma</div>
+        <h3 style="font-size:17px;color:#fff">Switching cost past — lekin ishonch baland</h3>
+        <p style="font-size:13.6px;margin-top:7px">Shu sababli narx kichik, mahsulot "o'rnini bosmaydigan" (24/7 kuzatuv, retry, statistika) qilinadi.</p></div>
+      <div class="card flat anim d5" style="padding:18px 20px"><div class="kicker" style="margin-bottom:8px">Moat</div>
+        <h3 style="font-size:17px;color:#fff">Kuzatuv dvigateli + hamjamiya</h3>
+        <p style="font-size:13.6px;margin-top:7px">Ko'p manbali xabarnoma logikasi, antipattern bazasi va tayyor integratsiyalar kutubxonasi — nusxa olish oson emas.</p></div>
+    </div>
+  </div>
+</section>
+<!-- ═══════════ 11 · NARXLAR ═══════════ -->
+<section class="slide" data-title="Narxlar">
+  <div class="slide-head">
+    <div class="txt"><span class="eyebrow">10 · Biznes model</span>
+      <h2>Sodda va shaffof narx — <span class="hl">komissiyasiz</span>, oylik obuna</h2></div>
+    <p style="max-width:400px;font-size:14.6px">Model "har bir tranzaksiyadan foiz" emas: sotuvchi qancha ko'p sotsa ham to'lov bir xil.
+      Ixtiyoriy GMV-komissiya esa keyingi bosqichda qo'shiladi.</p>
+  </div>
+  <div class="grid g3 anim d1" style="gap:22px;flex:1;align-content:start">
+    <div class="card price" style="position:relative">
+      <div class="top"><span class="badge" style="align-self:flex-start"> Start</span>
+        <h3 style="font-size:22px;margin-top:6px">Bepul sinov</h3>
+        <div class="amt"><b>0</b><span>so'm · 3 kun</span></div></div>
+      <ul>
+        <li>To'liq API va webhook'lar</li>
+        <li>Demo rejim va jonli simulyator</li>
+        <li>1 ta karta / 30 to'lov</li>
+        <li>Telegram orqali yordam</li>
+      </ul>
+      <div style="padding:0 28px 24px"><p style="font-size:13.4px;color:var(--muted-2)">Maqsad — sinab ko'rishni 0 qarorga aylantirish</p></div>
+    </div>
+    <div class="card price best" style="position:relative">
+      <span class="ribbon">Asosiy tarif</span>
+      <div class="top"><span class="badge on" style="align-self:flex-start">⚡ HamyonAPI Pro</span>
+        <h3 style="font-size:22px;margin-top:6px">1 oylik obuna</h3>
+        <div class="amt"><b>15 000</b><span>so'm / oy</span></div>
+        <p style="font-size:14px">≈ 1 $ — bir katta pizzadan ham arzon</p></div>
+      <ul>
+        <li><b>cheksiz</b> to'lov va webhook'lar</li>
+        <li>HUMO + UZCARD, bir nechta karta</li>
+        <li>Real-time kuzatuv (5–30s), cron kerak emas</li>
+        <li>Retry (3/10/30/60s) va status API</li>
+        <li>Tranzaksiya tarixi + CSV eksport</li>
+        <li>Yillik to'lovda <b>2 oy bepul</b> (150 000 so'm)</li>
+      </ul>
+    </div>
+    <div class="card price" style="position:relative">
+      <div class="top"><span class="badge" style="align-self:flex-start">📊 Add-on</span>
+        <h3 style="font-size:22px;margin-top:6px">Premium statistika</h3>
+        <div class="amt"><b>5 000</b><span>so'm / oy</span></div>
+        <p style="font-size:14px">Jami: 20 000 so'm / oy</p></div>
+      <ul>
+        <li>Konversiya va cancel sabablari</li>
+        <li>GMV, o'rtacha chek, kohorta</li>
+        <li>Issiqlik xaritasi va soatlik tahlil</li>
+        <li>Webhook log arxivi + alert'lar</li>
+        <li>Haftalik hisobot — botga avtomatik</li>
+      </ul>
+    </div>
+  </div>
+  <div class="grid g3" style="gap:16px;margin-top:8px">
+    <div class="card flat sunk anim d3" style="padding:16px 20px"><div class="kicker">O'rtacha ARPU</div>
+      <div style="font-size:26px;font-weight:800;color:#fff;margin-top:5px">17 000 so'm/oy</div>
+      <p style="font-size:12.8px">15 000 + har 10 mijozdan 4 tasining 5 000 so'mlik add-oni</p></div>
+    <div class="card flat sunk anim d4" style="padding:16px 20px"><div class="kicker">Kelgusi monetizatsiya</div>
+      <div style="font-size:26px;font-weight:800;color:#fff;margin-top:5px">0,3% GMV</div>
+      <p style="font-size:12.8px">ixtiyoriy "katta mijoz" tarifi (2028) — bozorni 2,3× oshiradi</p></div>
+    <div class="card flat sunk anim d5" style="padding:16px 20px"><div class="kicker">Chegirma orqali barqarorlik</div>
+      <div style="font-size:26px;font-weight:800;color:#fff;margin-top:5px">Yillik +18%</div>
+      <p style="font-size:12.8px">yillik to'lov churn ni kamaytiradi, LTV ni oshiradi</p></div>
+  </div>
+</section>
+
+<!-- ═══════════ 12 · TRACTION ═══════════ -->
+<section class="slide" data-title="Traction">
+  <div class="slide-head">
+    <div class="txt"><span class="eyebrow">11 · Hozirgi holat</span>
+      <h2>Loyiha <span class="hl">g'oya emas</span> — ishlayotgan platforma</h2></div>
+    <span class="badge on">✅ Live: hamyon-api.uz</span>
+  </div>
+  <div class="row" style="gap:24px">
+    <div class="col" style="flex:1.15;gap:18px">
+      <div class="grid g2" style="gap:16px">
+        <div class="card anim d1" style="padding:22px 24px"><div class="icon">🧱</div>
+          <h3 style="margin:13px 0 7px">API production'da</h3>
+          <p style="font-size:14.6px">/payment/create, /status, /cancel, prepare va complete callback'lari,
+            imzo tekshiruvi, 5 daqiqalik timeout va retry mexanizmi — to'liq tayyor.</p></div>
+        <div class="card anim d2" style="padding:22px 24px"><div class="icon">🤖</div>
+          <h3 style="margin:13px 0 7px">Bot-panel</h3>
+          <p style="font-size:14.6px">@HamyonAPIBot orqali shop_id/shop_key olish, do'kon sozlamalari,
+            tranzaksiya tarixi va "Yordam" bo'limi — alohida web-panel shart emas.</p></div>
+        <div class="card anim d3" style="padding:22px 24px"><div class="icon">📚</div>
+          <h3 style="margin:13px 0 7px">Hujjatlar va namuna</h3>
+          <p style="font-size:14.6px">Python va PHP uchun tayyor kod, jonli demo-simulyator, FAQ,
+            log-monitor — integratsiya o'rtacha <b>10 daqiqa</b>.</p></div>
+        <div class="card anim d4" style="padding:22px 24px"><div class="icon">📡</div>
+          <h3 style="margin:13px 0 7px">Kuzatuv dvigateli</h3>
+          <p style="font-size:14.6px">HUMO/UZCARD xabarnomalarini o'qib, summa va vaqt bo'yicha solishtiruvchi
+            watcher — ko'p manbali, takrorlanishga chidamli.</p></div>
+      </div>
+      <div class="card flat anim d5" style="padding:20px 24px;display:flex;align-items:center;gap:22px;flex-wrap:wrap">
+        <span class="badge on">🧪 Demo</span>
+        <p style="flex:1;min-width:280px;font-size:15px">Saytda jonli simulyator bor: <b>shop_demo123</b> → 50 000 so'm →
+          5–30 soniyada <b>paid</b>. Investor uchun ham, dasturchi uchun ham — bir tugma.</p>
+      </div>
+    </div>
+    <div class="col" style="flex:.85;gap:16px">
+      <div class="grid g2 anim d2" style="gap:16px">
+        <div class="card stat" style="padding:20px 22px"><div class="v">5–30<small> s</small></div><div class="l">aniqlash vaqti</div></div>
+        <div class="card stat" style="padding:20px 22px"><div class="v">24/7<small></small></div><div class="l">ishlash rejimi</div></div>
+        <div class="card stat" style="padding:20px 22px"><div class="v">4<small> ta</small></div><div class="l">API endpoint + 2 callback</div></div>
+        <div class="card stat" style="padding:20px 22px"><div class="v">~10<small> daq</small></div><div class="l">o'rtacha ulanish vaqti</div></div>
+      </div>
+      <div class="card sunk anim d4" style="padding:22px 24px">
+        <div class="kicker" style="margin-bottom:12px">Keyingi 90 kun uchun maqsadlar</div>
+        <ul class="clean" style="gap:11px">
+          <li style="font-size:15px"><b>400</b> faol to'lovchi do'kon</li>
+          <li style="font-size:15px"><b>95%+</b> callback yetib borish ko'rsatkichi (status-page bilan)</li>
+          <li style="font-size:15px"><b>2</b> tayyor SDK (Python / PHP) + 5 template bot</li>
+          <li style="font-size:15px">1 ta PSP bilan hamkorlik piloti (to'liq oq yo'liga ko'prik)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 13 · UNIT EKONOMIKA ═══════════ -->
+<section class="slide" data-title="Unit ekonomika">
+  <div class="slide-head">
+    <div class="txt"><span class="eyebrow">12 · Unit ekonomika</span>
+      <h2>ARPU kichik, lekin <span class="hl">LTV/CAC = 17,7×</span></h2></div>
+    <p style="max-width:420px;font-size:14.4px">Model arzon va ommaviy bo'lgani uchun klassik SaaS ko'rsatkichlaridan ham qattiqroq
+      — chunki infratuzilma deyarli "bitta kuzatuvchi" narxiga teng.</p>
+  </div>
+  <div class="grid g4 anim d1" style="gap:17px">
+    <div class="card stat"><div class="v">17 000<small> so'm</small></div><div class="l">ARPU / oy</div><div class="sub">15 000 obuna + add-on aralashmasi</div></div>
+    <div class="card stat"><div class="v">12 500<small> so'm</small></div><div class="l">CAC</div><div class="sub">Telegram-reklama + kontent, 1 mln so'm → 80 mijoz</div></div>
+    <div class="card stat"><div class="v">6%<small>/oy</small></div><div class="l">Churn</div><div class="sub">o'rtacha yashash ~16,7 oy</div></div>
+    <div class="card stat"><div class="v">221 000<small> so'm</small></div><div class="l">LTV (brutto foyda)</div><div class="sub">17 000 × 16,7 × 0,78</div></div>
+  </div>
+  <div class="row" style="gap:20px;margin-top:18px;flex:1">
+    <div class="card anim d3" style="flex:1;padding:24px 26px">
+      <div class="kicker" style="margin-bottom:16px">Oylik xarajat tuzilmasi (bugungi holda)</div>
+      <div style="display:flex;flex-direction:column;gap:13px">
+        <div><div style="display:flex;justify-content:space-between;font-size:14.6px"><span>Infra: VPS, proxy, CDN, monitoring</span><b>4 mln so'm</b></div>
+          <div style="height:9px;border-radius:100px;background:rgba(124,192,255,.10);margin-top:6px"><div style="width:11%;height:100%;border-radius:100px;background:linear-gradient(90deg,#7cc0ff,#2f7fe8)"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:14.6px"><span>Kuzatuv akkauntlari va raqamlar</span><b>6 mln so'm</b></div>
+          <div style="height:9px;border-radius:100px;background:rgba(124,192,255,.10);margin-top:6px"><div style="width:17%;height:100%;border-radius:100px;background:linear-gradient(90deg,#7cc0ff,#2f7fe8)"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:14.6px"><span> Ishlab chiqish (1 contractor)</span><b>12 mln so'm</b></div>
+          <div style="height:9px;border-radius:100px;background:rgba(124,192,255,.10);margin-top:6px"><div style="width:34%;height:100%;border-radius:100px;background:linear-gradient(90deg,#bfe0ff,#7cc0ff)"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:14.6px"><span>Marketing va kontent</span><b>10 mln so'm</b></div>
+          <div style="height:9px;border-radius:100px;background:rgba(124,192,255,.10);margin-top:6px"><div style="width:28%;height:100%;border-radius:100px;background:linear-gradient(90deg,#4fe3d0,#2f7fe8)"></div></div></div>
+        <div><div style="display:flex;justify-content:space-between;font-size:14.6px"><span>Yuridik, buxgalteriya, zaxira</span><b>3 mln so'm</b></div>
+          <div style="height:9px;border-radius:100px;background:rgba(124,192,255,.10);margin-top:6px"><div style="width:9%;height:100%;border-radius:100px;background:linear-gradient(90deg,#ffc978,#bfe0ff)"></div></div></div>
+      </div>
+      <div class="divider" style="margin:18px 0"></div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline">
+        <span class="kicker">Jami fix / oy</span><span style="font-size:27px;font-weight:800;color:#fff">≈ 35 mln so'm</span></div>
+    </div>
+    <div class="col" style="flex:.78;gap:16px">
+      <div class="card anim d4" style="padding:22px 24px">
+        <div class="kicker">Breakeven</div>
+        <div style="font-size:38px;font-weight:800;color:#fff;margin:8px 0 4px">2 050 <span style="font-size:16px;color:var(--muted)">faol obuna</span></div>
+        <p style="font-size:14px">35 mln ÷ 17 000 = 2 050 ta obuna. Prognoz bo'yicha <b>2027-yil 3-choragi</b> — investor mablag'ining asosiy qismi shu nuqtagacha ketadi.</p>
+      </div>
+      <div class="card flat anim d5" style="padding:22px 24px">
+        <div class="kicker" style="margin-bottom:12px">Nega barqaror</div>
+        <ul class="clean" style="gap:9px">
+          <li style="font-size:14.6px">Xarajat sublineal: bitta kuzatuvchi bir nechta kartani qamrab oladi</li>
+          <li style="font-size:14.6px">Komissiya yo'q → mijoz bilan to'qnashuv yo'q, ishonch oshadi</li>
+          <li style="font-size:14.6px">Add-on statistika GM'ni buzmaydi — deyarli sof foyda</li>
+          <li style="font-size:14.6px">Payback <b>0,7 oy</b> → marketing sikli juda tez</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 14 · PROGNOZ ═══════════ -->
+<section class="slide" data-title="Prognoz">
+  <div class="slide-head">
+    <div class="txt"><span class="eyebrow">13 · Moliyaviy prognoz</span>
+      <h2>MRR bo'yicha 3 yillik ko'tarilish</h2></div>
+    <p style="max-width:400px;font-size:14.4px">Ustunlar — mln so'mdagi MRR va undagi obunachilar soni. 2027-yildan boshlab yillik paketlar
+      va referral hisobiga o'sish silliq, lekin barqaror.</p>
+  </div>
+  <div class="card anim d1" style="flex:1;padding:26px 28px 18px;display:flex;flex-direction:column">
+    <div class="bars" style="flex:1;min-height:0">
+      <div class="bar-col"><div class="bar" style="height:8%"><span class="bv">6,8</span></div><div class="bl">26-Q1 · 400</div></div>
+      <div class="bar-col"><div class="bar" style="height:14%"><span class="bv">11,9</span></div><div class="bl">Q2 · 700</div></div>
+      <div class="bar-col"><div class="bar" style="height:20%"><span class="bv">17,0</span></div><div class="bl">Q3 · 1 000</div></div>
+      <div class="bar-col"><div class="bar" style="height:24%"><span class="bv">20,4</span></div><div class="bl">Q4 · 1 200</div></div>
+      <div class="bar-col"><div class="bar" style="height:30%"><span class="bv">25,5</span></div><div class="bl">27-Q1 · 1 500</div></div>
+      <div class="bar-col"><div class="bar" style="height:38%"><span class="bv">32,3</span></div><div class="bl">Q2 · 1 900</div></div>
+      <div class="bar-col"><div class="bar hot" style="height:48%"><span class="bv">40,8</span></div><div class="bl">Q3 · BE</div></div>
+      <div class="bar-col"><div class="bar" style="height:60%"><span class="bv">51,0</span></div><div class="bl">Q4 · 3 000</div></div>
+      <div class="bar-col"><div class="bar" style="height:70%"><span class="bv">59,5</span></div><div class="bl">28-Q1 · 3 500</div></div>
+      <div class="bar-col"><div class="bar" style="height:80%"><span class="bv">68,0</span></div><div class="bl">Q2 · 4 000</div></div>
+      <div class="bar-col"><div class="bar" style="height:90%"><span class="bv">76,5</span></div><div class="bl">Q3 · 4 500</div></div>
+      <div class="bar-col"><div class="bar hot" style="height:100%"><span class="bv">85,0</span></div><div class="bl">Q4 · SOM 5 000</div></div>
+    </div>
+  </div>
+  <div class="grid g3" style="gap:16px;margin-top:18px">
+    <div class="card flat anim d3" style="padding:19px 22px">
+      <div class="kicker">😟 Pessimistik</div>
+      <h3 style="font-size:22px;color:#fff;margin:7px 0 5px">612 mln so'm <span style="font-size:13px;color:var(--muted)">ARR</span></h3>
+      <p style="font-size:13.4px">3 000 mijoz · churn 9% · sekin marketing. O'zini o'zi moliyalashtirish rejimi.</p></div>
+    <div class="card flat anim d4" style="padding:19px 22px;border-color:rgba(124,192,255,.32)">
+      <div class="kicker" style="color:var(--sky)">🎯 Baza ssenariysi</div>
+      <h3 style="font-size:22px;color:#fff;margin:7px 0 5px">1,02 mlrd so'm <span style="font-size:13px;color:var(--muted)">ARR</span></h3>
+      <p style="font-size:13.4px">5 000 mijoz · ARPU 17 000 · 2029-yil oxiri. Sof foyda marjasi ~44%.</p></div>
+    <div class="card flat anim d5" style="padding:19px 22px">
+      <div class="kicker">🚀 Optimistik</div>
+      <h3 style="font-size:22px;color:#fff;margin:7px 0 5px">1,84 mlrd so'm <span style="font-size:13px;color:var(--muted)">ARR</span></h3>
+      <p style="font-size:13.4px">9 000 mijoz + 0,3% GMV komissiyasi va 2 ta davlat (KZ, KG).</p></div>
+  </div>
+</section>
+
+<!-- ═══════════ 15 · GTM ═══════════ -->
+<section class="slide" data-title="GTM">
+  <div class="slide-head">
+    <div class="txt"><span class="eyebrow">14 · Bozorga chiqish</span>
+      <h2>GTM: mijozni <span class="hl">u yashayotgan</span> joydan olamiz</h2></div>
+    <span class="badge">Telegram ichida → Telegram uchun</span>
+  </div>
+  <div class="row" style="gap:24px">
+    <div class="col" style="flex:1.1;gap:16px">
+      <div class="grid g2" style="gap:16px">
+        <div class="card flat anim d1" style="padding:20px 22px"><div class="icon">📣</div>
+          <h3 style="margin:12px 0 6px;font-size:18px">Kontent + build in public</h3>
+          <p style="font-size:14px">"5 daqiqada botingizga to'lov ulash" seriyasi: Telegram kanal, YouTube, Reels.
+            Har video → tayyor shablon.</p></div>
+        <div class="card flat anim d2" style="padding:20px 22px"><div class="icon">🧑‍💻</div>
+          <h3 style="margin:12px 0 6px;font-size:18px">Bot yaratuvchilar hamkorligi</h3>
+          <p style="font-size:14px">Freelancerlar va studiyalar — bizning resellermiz. Ular mijozga narxni qo'shib sotadi,
+            bizga — doimiy obuna.</p></div>
+        <div class="card flat anim d3" style="padding:20px 22px"><div class="icon">🎁</div>
+          <h3 style="margin:12px 0 6px;font-size:18px">Referral 20%</h3>
+          <p style="font-size:14px">Tavsiya qilgan do'konning birinchi 3 oylik to'lovi — tavsiyachi obunasidan
+            chegirma. Viral halqa tabiiy.</p></div>
+        <div class="card flat anim d4" style="padding:20px 22px"><div class="icon">🔎</div>
+          <h3 style="margin:12px 0 6px;font-size:18px">SEO + docs</h3>
+          <p style="font-size:14px">"hamyon api", "to'lov aniqlash telegram bot", "uzcard webhook" —
+            past raqobatli, yuqori niyatli so'rovlar.</p></div>
+      </div>
+      <div class="card anim d5" style="padding:20px 24px">
+        <div class="kicker" style="margin-bottom:14px">Konversiya funnelsi (birinchi sinov)</div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span class="badge">1 000 ko'ruv</span><span style="color:var(--muted-2)">→</span>
+          <span class="badge">120 bot /start</span><span style="color:var(--muted-2)">→</span>
+          <span class="badge">45 test to'lovi</span><span style="color:var(--muted-2)">→</span>
+          <span class="badge on">22 to'lovchi obuna</span>
+          <span style="font-size:13.4px;color:var(--muted-2);margin-left:6px">CAC 12 500 so'm · CAC ÷ ARPU = 0,7 oy qaytish</span>
+        </div>
+      </div>
+    </div>
+    <div class="col" style="flex:.9;gap:16px">
+      <div class="shot anim d2" style="height:296px">
+        <img src="assets/community.jpg" alt="Telegram hamjamiyagi va tarmoqli o'sish">
+        <span class="badge tag">🌐 Hamjamiya orqali o'sish</span>
+      </div>
+      <div class="card sunk anim d4" style="padding:22px 24px">
+        <div class="kicker" style="margin-bottom:12px">Birinchi 12 oy — KPI</div>
+        <div class="grid g2" style="gap:14px">
+          <div><div style="font-size:26px;font-weight:800;color:#fff">20 000</div><p style="font-size:12.6px">botga /start</p></div>
+          <div><div style="font-size:26px;font-weight:800;color:#fff">1 200</div><p style="font-size:12.6px">to'lovchi do'kon (6%)</p></div>
+          <div><div style="font-size:26px;font-weight:800;color:#fff">NPS 60+</div><p style="font-size:12.6px">support javob &lt; 15 daq</p></div>
+          <div><div style="font-size:26px;font-weight:800;color:#fff">≤ 6%</div><p style="font-size:12.6px">oylik churn</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 16 · ROADMAP ═══════════ -->
+<section class="slide" data-title="Roadmap">
+  <div class="slide-head">
+    <div class="txt"><span class="eyebrow">15 · Yo'l xaritasi</span>
+      <h2>2026 → 2027: platformadan <span class="hl">ekotizimgacha</span></h2></div>
+    <span class="badge">Har chorakda — sotiladigan yangi qatlam</span>
+  </div>
+  <div class="tl">
+    <div class="tl-row">
+      <div class="tl-node anim d1"><span class="q">2026 · Q1</span><div class="card">
+        <h4>Pul bazasi</h4><p>Narx siyosati ishga tushadi (15 000 / 5 000), billing va avtomatik to'lov.
+          Status-page, SLA 99,5%. Maqsad: 400 mijoz.</p></div></div>
+      <div class="tl-node anim d2"><span class="q">Q2</span><div class="card">
+        <h4>Developer qurollari</h4><p>Rasmiy Python/PHP SDK, 10 tayyor shablon bot, Postman kolleksiyasi,
+          sandbox muhit, test to'lovlari rejimi.</p></div></div>
+      <div class="tl-node anim d3"><span class="q">Q3</span><div class="card">
+        <h4>Premium statistika</h4><p>Add-on to'liq ishga tushadi: konversiya, kohorta, alert'lar, CSV.
+          Yillik paket — 2 oy bepul.</p></div></div>
+      <div class="tl-node anim d4"><span class="q">Q4</span><div class="card">
+        <h4>Ommaviy kuzatuv</h4><p>Bank push/OTP xabarnomalari uchun qo'shimcha manbalar, ko'p kartali
+          routing, 1 200 mijoz · MRR 20,4 mln.</p></div></div>
+      <div class="tl-node anim d5"><span class="q">2027 · Q1+</span><div class="card">
+        <h4>Katta o'yin</h4><p>PSP bilan rasmiy integratsiya (to'liq oq), ixtiyoriy 0,3% GMV tarifi,
+          mini-app SDK, Qozog'istonda pilot.</p></div></div>
+    </div>
+  </div>
+  <div class="grid g4" style="gap:16px;margin-top:26px">
+    <div class="card flat sunk anim d6" style="padding:18px 20px"><div class="kicker">Q1 metric</div>
+      <h3 style="margin-top:7px;font-size:19px">400 mijoz · 6,8 mln MRR</h3></div>
+    <div class="card flat sunk anim d7" style="padding:18px 20px"><div class="kicker">Q4 metric</div>
+      <h3 style="margin-top:7px;font-size:19px">1 200 mijoz · 20,4 mln MRR</h3></div>
+    <div class="card flat sunk anim d8" style="padding:18px 20px"><div class="kicker">Uptime</div>
+      <h3 style="margin-top:7px;font-size:19px">99,5% → 99,9%</h3></div>
+    <div class="card flat sunk anim d9" style="padding:18px 20px"><div class="kicker">Support</div>
+      <h3 style="margin-top:7px;font-size:19px">javob &lt; 15 daqiqa</h3></div>
+  </div>
+</section>
+
+<!-- ═══════════ 17 · RISKLAR ═══════════ -->
+<section class="slide" data-title="Risklar">
+  <div class="slide-head">
+    <div class="txt"><span class="eyebrow">16 · Risklar</span>
+      <h2>Risklarni <span class="hl">bilamiz</span> — va oldindan boshqaramiz</h2></div>
+    <span class="badge">Xavfsizlik va huquq — birinchi o'rinda</span>
+  </div>
+  <div class="card anim d1" style="flex:1;padding:20px 24px">
+    <table>
+      <thead><tr><th style="width:22%">Risk</th><th style="width:9%">Tahdid</th><th style="width:34%">Nima qilamiz</th><th>Hozirgi holat</th></tr></thead>
+      <tbody>
+        <tr><td>⚖️ Tartibga solish — to'lov faoliyati litsenziyasi</td><td class="no">Yuqori</td>
+          <td>Hamyon mablag' o'tkazmaydi — mijoz o'z kartasiga o'zi to'laydi. Yuridik xulosa, faoliyat doirasini hujjatlashtirish,
+            2027-yilda PSP orqali "to'liq oq" rejimga o'tish.</td><td class="mid">maslahatchi bilan ishlash boshlangan</td></tr>
+        <tr><td>🔌 Karta xabarnoma botlariga bog'liqlik</td><td class="no">Yuqori</td>
+          <td>Ko'p manbali kuzatuv (bir nechta bot, push, e-mail), fallback sifatida polling, muammoli holatda
+            qo'lda tasdiqlash rejimi.</td><td class="mid">2 ta manba faol, 3-chi yo'lda</td></tr>
+        <tr><td>🕵 Shubhali ishlatish (noqonuniy kontent)</td><td class="mid">O'rta</td>
+          <td>Do'kon ro'yxatdan o'tkazish, summa va chastota limitlari, qora ro'yxat, shikoyat bo'lsa to'xtatish,
+            hamkorlikka tayyorlik.</td><td class="mid">limitlar + monitoring</td></tr>
+        <tr><td>📉 Kichik biznesda churn</td><td class="mid">O'rta</td>
+          <td>Yillik paket, statistikaga bog'liqlik (add-on), avtomatik to'lov, "do'kon yopildi" holatida saqlab
+            qoluvchi tarif (5 000 so'm).</td><td class="mid">target ≤ 6%/oy</td></tr>
+        <tr><td>🥊 Raqobat / narx urushi</td><td class="mid">O'rta</td>
+          <td>Tezlik (5–30s), DX va retry kafolatini standart sifatida ushlab turish; hamjamiya va
+            template kutubxonasi — nusxa olish qiyin qatlam.</td><td class="ok">biz — birinchi maxsus yechim</td></tr>
+        <tr><td>⏱ Texnik: callback yo'qolishi</td><td class="ok">Past</td>
+          <td>Retry 3/10/30/60s, idempotent payment_id, status-page, watchdog va alarm'lar.</td><td class="ok">yo'lga qo'yilgan</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="row tight" style="gap:16px;margin-top:18px">
+    <div class="card flat anim d3" style="flex:1;padding:18px 22px;display:flex;gap:16px;align-items:center">
+      <div class="icon" style="flex:none">🧯</div>
+      <p style="font-size:14.4px"><b>Ehtiyotlik prinsipi:</b> bir oylik daromadning <b>20%</b> alohida zaxira hisobida
+        saqlanadi — texnik uzilishda mijozlarga kompensatsiya uchun.</p></div>
+    <div class="card flat anim d4" style="flex:1;padding:18px 22px;display:flex;gap:16px;align-items:center">
+      <div class="icon" style="flex:none">📄</div>
+      <p style="font-size:14.4px"><b>Shaffoflik:</b> ishlatuvchi shartnomasida bizning rolimiz —
+        "xabarnomalarni o'qish va xabar berish", to'lov agenti emasligi aniq yozilgan.</p></div>
+  </div>
+</section>
+
+<!-- ═══════════ 18 · JAMOA ═══════════ -->
+<section class="slide" data-title="Jamoa">
+  <div class="slide-head">
+    <div class="txt"><span class="eyebrow">17 · Jamoa</span>
+      <h2>Bitta kishidan boshlangan — <span class="hl">mahsulot allaqachon jonli</span></h2></div>
+    <span class="badge">HamyonAPI · Team</span>
+  </div>
+  <div class="row" style="gap:26px;align-items:stretch">
+    <div class="card person anim d1" style="flex:1.25;align-items:center">
+      <div class="avatar"><img src="assets/ceo.jpg" alt="Hamitjonov Ruslan — CEO"></div>
+      <div class="col" style="gap:14px;flex:1">
+        <div><div class="role">Founder · CEO</div>
+          <h2 style="font-size:40px;margin:8px 0 4px">Hamitjonov Ruslan</h2>
+          <p style="font-size:15px">Loyiha muallifi va yagona operator: mahsulot strategiyasi, arxitektura,
+            backend, DevOps, support va savdo — hammasi bitta odamda.</p></div>
+        <div class="chip-row">
+          <span class="badge">🐍 Python · aiogram/Telethon</span>
+          <span class="badge">🗄 MySQL · async</span>
+          <span class="badge">🔌 REST API · webhook</span>
+        </div>
+        <div class="divider"></div>
+        <ul class="clean" style="gap:10px">
+          <li style="font-size:15.4px">Telegram-bot ekosistemini <b>ichkaridan</b> biladi: botlar, xabarnomalar,
+            karta bildirimlari, to'lov aniqlash mantig'i.</li>
+          <li style="font-size:15.4px">HamyonAPI'ni <b>0 dan production'gacha</b> o'zi qurdi: API, bot-panel,
+            kuzatuv dvigateli, hujjatlar va demo.</li>
+          <li style="font-size:15.4px">Tez sikl: mijozdan kelgan taklif <b>kunlar</b> ichida funksiyaga aylanadi —
+            bu kichik jamoaning asosiy quroli.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col" style="flex:.75;gap:16px">
+      <div class="shot anim d2" style="height:186px">
+        <img src="assets/growth.jpg" alt="O'sish" style="object-position:center 40%">
+      </div>
+      <div class="card sunk anim d4" style="padding:22px 24px">
+        <div class="kicker" style="margin-bottom:12px">Biz qidirayotgan qo'shimcha kuch (mablag'dan keyin)</div>
+        <ul class="clean" style="gap:10px">
+          <li style="font-size:14.6px"><b>Fullstack dev</b> — panel va SDK lar uchun</li>
+          <li style="font-size:14.6px"><b>Sotuv / community</b> — Telegram hamjamiyalar bilan ishlash</li>
+          <li style="font-size:14.6px"><b>Yuridik maslahatchi</b> — to'lov faoliyati bo'yicha (part-time)</li>
+        </ul>
+        <p style="font-size:13px;color:var(--muted-2);margin-top:12px">Hozircha bu funksiyalarni CEO o'z zimmasiga olgan —
+          mablag' aynan shu uchun so'ralmoqda.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 19 · SO'ROV ═══════════ -->
+<section class="slide" data-title="So'rov">
+  <div class="slide-head">
+    <div class="txt"><span class="eyebrow">18 · Investitsiya so'rovi</span>
+      <h2>600 mln so'm — <span class="hl">18 oylik runway</span> va breakevengacha yo'l</h2></div>
+    <span class="badge on">600 000 000 so'm ≈ $47 000 · 25% aksiya</span>
+  </div>
+  <div class="row" style="gap:30px;align-items:center">
+    <div class="col" style="flex:1.05;gap:16px">
+      <div class="grid g3 anim d1" style="gap:16px">
+        <div class="card stat" style="padding:20px 22px"><div class="v">25%</div><div class="l">aksiya uchun</div>
+          <div class="sub">post-money 2,4 mlrd so'm ≈ 10× Y1 ARR</div></div>
+        <div class="card stat" style="padding:20px 22px"><div class="v">18 <small>oy</small></div><div class="l">runway — breakevengacha</div>
+          <div class="sub">o'rtacha ~33 mln so'm/oy defitsit</div></div>
+        <div class="card stat" style="padding:20px 22px"><div class="v">Q3-27</div><div class="l">prognoz breakeven</div>
+          <div class="sub">2 050 faol obuna · keyin sof foyda</div></div>
+      </div>
+      <div class="card anim d3" style="padding:22px 26px">
+        <div class="kicker" style="margin-bottom:14px">Bu bizning "nima olishimiz" ro'yxati</div>
+        <div class="grid g2" style="gap:14px">
+          <ul class="tick" style="list-style:none;display:flex;flex-direction:column;gap:10px">
+            <li style="position:relative;padding-left:28px;font-size:15px;color:var(--muted)">
+              <b>2 kishilik jamoa</b> — dev + community/sotuv</li>
+            <li style="position:relative;padding-left:28px;font-size:15px;color:var(--muted)">Kuzatuv dvigatelini
+              <b>10× ko'p</b> kartaga mo'ljallash</li>
+            <li style="position:relative;padding-left:28px;font-size:15px;color:var(--muted)">Xavfsizlik auditi va
+              yuridik xulosa</li>
+          </ul>
+          <ul class="tick" style="list-style:none;display:flex;flex-direction:column;gap:10px">
+            <li style="position:relative;padding-left:28px;font-size:15px;color:var(--muted)">Premium statistika
+              modulini to'liq chiqarish</li>
+            <li style="position:relative;padding-left:28px;font-size:15px;color:var(--muted)">SDK, 10 shablon bot,
+              sandbox muhit</li>
+            <li style="position:relative;padding-left:28px;font-size:15px;color:var(--muted)">Marketing: 12 mln so'm/oy →
+              <b>1 200 mijoz</b></li>
+          </ul>
+        </div>
+      </div>
+      <div class="card flat anim d5" style="padding:18px 24px;display:flex;gap:18px;align-items:center">
+        <span class="badge on" style="flex:none">🤝 Alternativa</span>
+        <p style="font-size:14.6px"><b>Royalty-debt:</b> 600 mln so'm, oylik daromadning <b>20%</b> i qaytariladi
+          (cap — 1,5×) + 8% varrant. Strategik investor uchun esa infratuzilma yoki mijoz bazasi kiritiladi
+          (PSP, banka, bot-platforma) — birgalikda paket sotamiz.</p>
+      </div>
+    </div>
+    <div class="col" style="flex:.85;gap:20px">
+      <div class="row" style="align-items:center;gap:24px;flex:none">
+        <div class="donut anim d2"><div class="mid"><b>600 mln</b><span>so'm</span></div></div>
+        <div class="legend anim d3">
+          <div><i style="background:var(--blue)"></i>Mahsulot &amp; ishlab chiqish — <b>40%</b></div>
+          <div><i style="background:var(--sky)"></i>Marketing &amp; GTM — <b>30%</b></div>
+          <div><i style="background:var(--cyan)"></i>Infra &amp; xavfsizlik — <b>20%</b></div>
+          <div><i style="background:var(--amber)"></i>Yuridik &amp; zaxira — <b>10%</b></div>
+        </div>
+      </div>
+      <div class="card sunk anim d4" style="padding:22px 24px">
+        <div class="kicker" style="margin-bottom:12px">Kutilayotgan qaytish</div>
+        <p style="font-size:15px">2029-yil oxiri: <b>1,02 mlrd so'm ARR</b> (baza) → 10× ARR = 10,2 mlrd so'm.
+          25% ulush ≈ 2,55 mlrd so'm — ya'ni <b>4,3×</b> qaytish; optimistik ssenariyda <b>7,7×</b> yoki
+          strategik chiqish (marketplace / PSP birlashuvi).</p>
+        <div class="divider"></div>
+        <p style="font-size:13.4px;color:var(--muted-2)">Keyingi bosqich: 2027 — PSP bilan rasmiy oqim va
+          0,3% GMV tarifi (ARR ni 2,3× oshiradi).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 20 · YOPILISH ═══════════ -->
+<section class="slide" data-title="CTA">
+  <div class="row center" style="gap:56px;flex-direction:column;text-align:center">
+    <div class="col center anim" style="gap:22px;max-width:1080px">
+      <span class="eyebrow">Xulosa</span>
+      <h1 style="font-size:62px">To'lov qabul qilish —<br>endi <span class="hl">bir so'rovlik</span> ish.</h1>
+      <p class="lead" style="max-width:760px">HamyonAPI — O'zbekistondagi Telegram-iqtisodiyoti uchun
+        eng arzon va eng tez to'lov qatlami. 15 000 so'mga bir do'konning 34 soatini qaytaramiz;
+        55 000 do'konga ko'paytirilsa — bu deyarli bozorning o'zi.</p>
+      <div class="chip-row" style="justify-content:center;margin-top:8px">
+        <span class="badge on">⚡ 5–30s</span><span class="badge">🔒 Mablag'ga tegmaymiz</span>
+        <span class="badge">🧾 0% komissiya</span><span class="badge">📈 Premium statistika</span>
+        <span class="badge">🇺🇿 HUMO + UZCARD</span>
+      </div>
+    </div>
+    <div class="grid g3 anim d3" style="gap:18px;width:100%">
+      <div class="card flat" style="padding:20px 24px;text-align:center">
+        <div class="kicker">Mahsulot</div><h3 style="margin-top:8px;font-size:21px">hamyon-api.uz</h3>
+        <p style="font-size:14px">API hujjatlari va jonli demo</p></div>
+      <div class="card flat" style="padding:20px 24px;text-align:center">
+        <div class="kicker">Boshlash</div><h3 style="margin-top:8px;font-size:21px">@HamyonAPIBot</h3>
+        <p style="font-size:14px">shop_id va shop_key — 1 daqiqada</p></div>
+      <div class="card flat" style="padding:20px 24px;text-align:center">
+        <div class="kicker">Aloqa</div><h3 style="margin-top:8px;font-size:21px">Hamitjonov Ruslan · CEO</h3>
+        <p style="font-size:14px">t.me/HamyonAPI · investitsiya va hamkorlik bo'yicha</p></div>
+    </div>
+    <p class="anim d5" style="font-size:13px;color:var(--muted-2);letter-spacing:.14em;text-transform:uppercase">
+      Rahmat · HamyonAPI Pitch Deck · 2026</p>
+  </div>
+</section>
+
+
+</div></div>
+
+<div id="hud">
+  <div class="brandline"><i></i> HamyonAPI · Pitch 2026</div>
+  <div id="dots"></div>
+  <div id="navbtns">
+    <button class="nbtn" id="prev" aria-label="Oldingi slayd">‹</button>
+    <span id="counter">1 / 20</span>
+    <button class="nbtn" id="next" aria-label="Keyingi slayd">›</button>
+    <button class="nbtn" id="fs" title="Butun ekran (F)">⤢</button>
+    <button class="nbtn" id="pr" title="PDF uchun chop etish (P)">⎙</button>
+  </div>
+</div>
+<div class="hint"><span class="kbd">←</span> <span class="kbd">→</span> slayd · <span class="kbd">F</span> fullscreen · <span class="kbd">Home</span> boshiga</div>
+
+<script>
+/* ══════════ HamyonAPI deck · navigation ══════════ */
+(function () {
+  const stage = document.getElementById('stage');
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const dots = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  const bar = document.getElementById('bar');
+  let i = 0;
+
+  /* ── dots ── */
+  slides.forEach((s, n) => {
+    const b = document.createElement('button');
+    b.title = (s.dataset.title || 'Slayd ' + (n + 1));
+    b.setAttribute('aria-label', b.title);
+    b.addEventListener('click', () => go(n));
+    dots.appendChild(b);
+  });
+  const dotEls = Array.from(dots.children);
+
+  /* ── keep original bar heights for animation ── */
+  document.querySelectorAll('.bar').forEach(b => { b.dataset.h = b.style.height || '0%'; b.style.height = '0%'; });
+
+  /* ── wrap slide content so it can be auto-fitted ── */
+  slides.forEach(s => {
+    const w = document.createElement('div');
+    w.className = 'fitwrap';
+    while (s.firstChild) w.appendChild(s.firstChild);
+    s.appendChild(w);
+  });
+
+  /* ── auto-fit: never let a slide overflow its 1600×900 canvas ── */
+  const PAD_T = 56, PAD_B = 84, W = 1600 - 140, H = 900 - PAD_T - PAD_B;
+  function measure(s) {
+    const w = s.querySelector('.fitwrap');
+    if (!w) return;
+    s.classList.add('noanim');
+    w.style.cssText = 'position:absolute;left:70px;top:' + PAD_T + 'px;width:' + W + 'px;height:auto;transform:none';
+    s.querySelectorAll('.bar').forEach(b => { b.style.height = b.dataset.h; });
+    const need = Math.max(w.scrollHeight, 1);
+    w.style.cssText = '';
+    const k = Math.min(1, (H - 4) / need);
+    s.dataset.fit = k.toFixed(3);
+    if (k < .998) {
+      w.style.transform = 'scale(' + k.toFixed(4) + ')';
+      w.style.width = (100 / k).toFixed(3) + '%';
+    }
+    s.classList.remove('noanim');
+    s.querySelectorAll('.bar').forEach(b => { b.style.height = '0%'; });
+  }
+  function fitAll() {
+    slides.forEach(s => { if (s.classList.contains('is-active')) return; s.querySelectorAll('.bar').forEach(b => b.style.height = b.dataset.h); });
+    slides.forEach(measure);
+    slides.forEach(s => s.querySelectorAll('.bar').forEach(b => { b.style.height = s.classList.contains('is-active') ? b.dataset.h : '0%'; }));
+  }
+
+  function scale() {
+    const s = Math.min(window.innerWidth / 1600, (window.innerHeight - 60) / 900);
+    document.documentElement.style.setProperty('--scale', Math.max(s, .18).toFixed(4));
+  }
+
+  function go(n, silent) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, k) => {
+      s.classList.toggle('is-active', k === i);
+      s.classList.toggle('is-prev', k < i);
+      s.querySelectorAll('.bar').forEach(b => { b.style.height = k === i ? b.dataset.h : '0%'; });
+    });
+    dotEls.forEach((d, k) => d.classList.toggle('on', k === i));
+    counter.textContent = (i + 1) + ' / ' + slides.length;
+    bar.style.width = ((i + 1) / slides.length * 100) + '%';
+    if (!silent) {
+      const h = '#slayd-' + (i + 1);
+      if (location.hash !== h) history.replaceState(null, '', h);
+    }
+    const t = slides[i].dataset.title;
+    document.title = (i ? (t + ' · ') : '') + 'HamyonAPI — Pitch Deck 2026';
+  }
+
+  const next = () => go(i + 1), prev = () => go(i - 1);
+  document.getElementById('next').addEventListener('click', next);
+  document.getElementById('prev').addEventListener('click', prev);
+  document.getElementById('pr').addEventListener('click', () => window.print());
+
+  /* ── keyboard ── */
+  document.addEventListener('keydown', e => {
+    if (e.metaKey || e.ctrlKey) return;
+    switch (e.key) {
+      case 'ArrowRight': case 'ArrowDown': case 'PageDown': case ' ': case 'Enter':
+        e.preventDefault(); next(); break;
+      case 'ArrowLeft': case 'ArrowUp': case 'PageUp': case 'Backspace':
+        e.preventDefault(); prev(); break;
+      case 'Home': e.preventDefault(); go(0); break;
+      case 'End': e.preventDefault(); go(slides.length - 1); break;
+      case 'f': case 'F': case 'е': case 'к':
+        document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(); break;
+      case 'p': case 'P': case 'з': case 'г': window.print(); break;
+    }
+  });
+
+  /* ── swipe ── */
+  let sx = 0, sy = 0, sTime = 0;
+  stage.addEventListener('touchstart', e => {
+    const t = e.changedTouches[0]; sx = t.clientX; sy = t.clientY; sTime = Date.now();
+  }, { passive: true });
+  stage.addEventListener('touchend', e => {
+    const t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy;
+    if (Date.now() - sTime < 800 && Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy) * 1.4)
+      dx < 0 ? next() : prev();
+  }, { passive: true });
+
+  /* ── wheel (throttled) ── */
+  let lock = 0;
+  window.addEventListener('wheel', e => {
+    const now = Date.now();
+    if (now - lock < 620 || Math.abs(e.deltaY) < 14) return;
+    lock = now; e.deltaY > 0 ? next() : prev();
+  }, { passive: true });
+
+  /* ── deep link ── */
+  const fromHash = () => {
+    const m = location.hash.match(/slayd-(\d+)/);
+    return m ? Math.min(slides.length, Math.max(1, +m[1])) - 1 : 0;
+  };
+  window.addEventListener('hashchange', () => go(fromHash(), true));
+  window.addEventListener('resize', () => { scale(); });
+  scale(); go(fromHash());
+
+  /* measure once fonts are settled (metrics change with webfont) */
+  const run = () => { fitAll(); scale(); };
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(run);
+  window.addEventListener('load', run);
+  setTimeout(run, 120); setTimeout(run, 900);
+})();
+</script>
+
+</body>
+</html>
